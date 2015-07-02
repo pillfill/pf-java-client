@@ -1,0 +1,66 @@
+plugins {
+    id 'me.tatarka.retrolambda' version '3.1.0'
+    id 'java'
+    id 'maven'
+}
+
+def Properties versionProps = new Properties()
+def versionPropsFile = file('version.properties')
+if(versionPropsFile.exists())
+    versionProps.load(new FileInputStream(versionPropsFile))
+def code = (versionProps['VERSION_CODE'] ?: "0").toInteger() + 1
+versionProps['VERSION_CODE'] = code.toString()
+versionProps.store(versionPropsFile.newWriter(), null)
+
+sourceCompatibility = '1.8'
+version = '1.0.' + code
+group = 'com.apothesource.pillfill'
+archivesBaseName = 'pf-java-client'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+}
+retrolambda {
+    oldJdk "/usr/libexec/java_home -v1.7".execute().text.trim()
+    defaultMethods false
+    incremental true
+}
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'org.cryptonode.jncryptor:jncryptor:1.2.0'
+    compile 'io.reactivex:rxjava:1.0.11'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
+    compile 'com.google.dagger:dagger:2.0.1'
+    compile 'com.jakewharton.timber:timber:3.1.0'
+    compile 'com.google.guava:guava:18.0'
+
+    provided 'com.google.dagger:dagger-compiler:2.0.1'
+
+    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'junit:junit:4.12'
+}
+
+task copyTestResources(type: Copy) {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/classes/test"
+}
+test{
+    exclude 'com/apothesource/pillfill/service/*/impl/*'
+    systemProperties 'pfApiKey': System.properties['pfApiKey']
+    logging.setLevel(LogLevel.INFO)
+}
