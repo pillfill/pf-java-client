@@ -18,13 +18,13 @@ Swagger documentation on the REST services is available at the <a href="https://
 
 Patient Information
 -------
-###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientService.java">com.apothesource.pillfill.service.patient.PatientService</a>
+###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientService.java">PatientService</a>
 
-Each instance of this service represents a <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/datamodel/PatientType.java">single patient</a.. It is responsible for managing the Rx lists for an individual
+Each instance of this service represents a <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/datamodel/PatientType.java">single patient</a>. It is responsible for managing the Rx lists for an individual
 and syncing to/from the server. It ensures that sensitive information about the user is encrypted before it is synced to 
 the server.
 
-###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientServiceLocator.java">com.apothesource.pillfill.service.patient.PatientServiceLocator</a>
+###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientServiceLocator.java">PatientServiceLocator</a>
 
 PatientServiceLocator helps organize and mange instances of PatientService (assuming you're managing multiple patients).
  
