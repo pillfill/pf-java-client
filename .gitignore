@@ -1,5 +1,6 @@
 /src/test/resources/private_credentials.properties
 /src/integration-test/resources/private_credentials.properties
+/gradle.properties
 /.gradle/*
 /build/*
 /.nb-gradle-properties
