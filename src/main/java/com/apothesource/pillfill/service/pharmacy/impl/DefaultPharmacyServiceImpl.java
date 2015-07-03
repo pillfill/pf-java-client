@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.service.pharmacy.impl;
 
@@ -30,8 +32,8 @@ package com.apothesource.pillfill.service.pharmacy.impl;
 import com.apothesource.pillfill.datamodel.PharmacyType;
 import com.apothesource.pillfill.datamodel.PrescriptionType;
 import com.apothesource.pillfill.datamodel.android.GooglePlaceSearchResult.PlaceSearchResponse;
-import com.apothesource.pillfill.network.PillFillSSLSocketFactory;
-import com.apothesource.pillfill.service.patient.PatientServiceParams;
+import com.apothesource.pillfill.network.PFNetworkManager;
+import com.apothesource.pillfill.service.PFServiceEndpoints;
 import com.apothesource.pillfill.service.pharmacy.PharmacyService;
 import com.apothesource.pillfill.utilites.ResourceUtil;
 import static com.apothesource.pillfill.utilites.ReactiveUtils.subscribeIoObserveImmediate;
@@ -80,11 +82,11 @@ public class DefaultPharmacyServiceImpl implements PharmacyService {
     public Observable<PlaceSearchResponse> searchForPharmacyPlacesNearLocation(String keyword, String pgtoken, double lat, double lng, int radius) {
         keyword = (keyword == null) ? "" : keyword;
         pgtoken = (pgtoken == null) ? "" : pgtoken;
-        String url = String.format(Locale.US, PatientServiceParams.PHARMACIES_SEARCH_URL, keyword, lat, lng, radius, pgtoken);
+        String url = String.format(Locale.US, PFServiceEndpoints.PHARMACY_SEARCH_URL, keyword, lat, lng, radius, pgtoken);
         Timber.d("Accessing pharmacy lookup URL: %s", url);
         Observable<PlaceSearchResponse> observable = Observable.create(subscriber -> {
             try {
-                String response = PillFillSSLSocketFactory.doPinnedGetForUrl(url);
+                String response = PFNetworkManager.doPinnedGetForUrl(url);
                 subscriber.onNext(gson.fromJson(response, PlaceSearchResponse.class));
                 subscriber.onCompleted();
             } catch (IOException e) {
@@ -97,11 +99,11 @@ public class DefaultPharmacyServiceImpl implements PharmacyService {
 
     @Override
     public Observable<PharmacyType> getPharmacyPlace(String ref) {
-        String url = String.format(Locale.US, PatientServiceParams.PHARMACY_GET_PLACE_URL, ref);
+        String url = String.format(Locale.US, PFServiceEndpoints.PHARMACY_GET_PLACE_URL, ref);
         Timber.d("Pulling pharmacy place URL: %s", url);
         return subscribeIoObserveImmediate(subscriber -> {
             try {
-                String response = PillFillSSLSocketFactory.doPinnedGetForUrl(url);
+                String response = PFNetworkManager.doPinnedGetForUrl(url);
                 PharmacyType pharmacy = gson.fromJson(response, PharmacyType.class);
                 if(pharmacy != null){
                     subscriber.onNext(pharmacy);
@@ -122,10 +124,10 @@ public class DefaultPharmacyServiceImpl implements PharmacyService {
         }
         return subscribeIoObserveImmediate(subscriber -> {
             String idList = Joiner.on("&ids=").join(pharmacyIds);
-            String url = String.format(PatientServiceParams.PHARMACIES_URL, idList);
+            String url = String.format(PFServiceEndpoints.PHARMACY_URL, idList);
             Timber.d("Requesting pharmacy info url: " + url);
             try {
-                String response = PillFillSSLSocketFactory.doPinnedGetForUrl(url);
+                String response = PFNetworkManager.doPinnedGetForUrl(url);
                 List<PharmacyType> pharmacies = gson.fromJson(response, PHARMACY_LIST_TYPE);
                 Observable.from(pharmacies).forEach(subscriber::onNext);
                 subscriber.onCompleted();

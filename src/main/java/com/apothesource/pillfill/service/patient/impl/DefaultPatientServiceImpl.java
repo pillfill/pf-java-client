@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.service.patient.impl;
 
@@ -35,7 +37,7 @@ import com.apothesource.pillfill.datamodel.android.exception.EncryptionException
 import com.apothesource.pillfill.exception.InvalidPrescriptionIdException;
 import com.apothesource.pillfill.exception.PFMasterPasswordException;
 import com.apothesource.pillfill.exception.PFBadTokenException;
-import com.apothesource.pillfill.network.PillFillSSLSocketFactory;
+import com.apothesource.pillfill.network.PFNetworkManager;
 import com.apothesource.pillfill.service.drug.DrugAlertService;
 import com.apothesource.pillfill.service.drug.impl.DefaultDrugAlertServiceImpl;
 import com.apothesource.pillfill.service.patient.command.ExecutionResult;
@@ -43,7 +45,7 @@ import com.apothesource.pillfill.service.patient.command.ModifyPatientActions;
 import com.apothesource.pillfill.service.patient.command.ModifyPatientActions.ModifyPatientCommand;
 import com.apothesource.pillfill.service.patient.command.ModifyPatientActions.PatientCommand;
 import com.apothesource.pillfill.service.patient.command.ModifyPatientActions.UpdatePatientOnServerAction;
-import com.apothesource.pillfill.service.patient.PatientServiceParams;
+import com.apothesource.pillfill.service.PFServiceEndpoints;
 import static com.apothesource.pillfill.utilites.ReactiveUtils.subscribeIoObserveImmediate;
 import com.google.common.base.Joiner;
 
@@ -335,11 +337,11 @@ public class DefaultPatientServiceImpl implements PatientServiceImpl {
 
         @Override
         public Observable<ExecutionResult> doAction() {
-            mUpdateUrl = String.format(PatientServiceParams.PATIENT_UPDATE_URL, mPatientSvc.getAuthToken().getEmail());
+            mUpdateUrl = String.format(PFServiceEndpoints.PATIENT_UPDATE_URL, mPatientSvc.getAuthToken().getEmail());
             return subscribeIoObserveImmediate(Observable.create(subscriber -> {
                 Timber.d("Requesting url: %d", mUpdateUrl);
                 try {
-                    OkHttpClient okClient = PillFillSSLSocketFactory.getPinnedPFHttpClient();
+                    OkHttpClient okClient = PFNetworkManager.getPinnedPFHttpClient();
                     Request.Builder reqBuilder = new Request.Builder()
                             .url(mUpdateUrl)
                             .addHeader("Bearer", mPatientSvc.getAuthToken().toAuthTokenHeaderString())
@@ -369,7 +371,7 @@ public class DefaultPatientServiceImpl implements PatientServiceImpl {
 
         public LoadRxDataAction() {
             mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-            mHttpClient = PillFillSSLSocketFactory.getPinnedPFHttpClient();
+            mHttpClient = PFNetworkManager.getPinnedPFHttpClient();
         }
 
         public LoadRxDataAction prescriptionIds(List<String> rxIds) {
@@ -395,7 +397,7 @@ public class DefaultPatientServiceImpl implements PatientServiceImpl {
                 for (int i = 0; i < mRxIdList.size(); i += 100) {
                     List<String> rxIdSubset = mRxIdList.subList(i, (mRxIdList.size() >= i + 100) ? i + 100 : mRxIdList.size());
                     String rxIdsParams = Joiner.on("&ids=").join(rxIdSubset);
-                    String updateUrl = String.format(PatientServiceParams.PRESCRIPTIONS_URL, rxIdsParams);
+                    String updateUrl = String.format(PFServiceEndpoints.PRESCRIPTIONS_URL, rxIdsParams);
                     try {
                         Request.Builder loadRequest = new Request.Builder().url(updateUrl);
                         Response loadResponse = mHttpClient.newCall(loadRequest.build()).execute();
@@ -469,12 +471,12 @@ public class DefaultPatientServiceImpl implements PatientServiceImpl {
 
         @Override
         public Observable<ExecutionResult> doAction() {
-            mUpdateUrl = String.format(PatientServiceParams.PATIENT_UPDATE_URL, mPatientSvc.getAuthToken().getEmail());
+            mUpdateUrl = String.format(PFServiceEndpoints.PATIENT_UPDATE_URL, mPatientSvc.getAuthToken().getEmail());
             mCurRevision = mPatientSvc.getPatientData().get_rev();
             return subscribeIoObserveImmediate(Observable.create(subscriber -> {
                 Timber.d("Requesting url: %s", mUpdateUrl);
                 try {
-                    HttpsURLConnection connection = PillFillSSLSocketFactory.getPFHttpsURLConnection(mUpdateUrl);
+                    HttpsURLConnection connection = PFNetworkManager.getPFHttpsURLConnection(mUpdateUrl);
                     connection.setRequestProperty("Bearer", mPatientSvc.getAuthToken().toAuthTokenHeaderString());
                     connection.setRequestMethod("HEAD");
                     connection.addRequestProperty("Cache-Control", "no-cache");

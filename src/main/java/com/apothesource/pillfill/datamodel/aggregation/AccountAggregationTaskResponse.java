@@ -23,21 +23,36 @@
  *  * THE SOFTWARE.
  *
  */
-package com.apothesource.pillfill.service.prescription;
+package com.apothesource.pillfill.datamodel.aggregation;
 
 import com.apothesource.pillfill.datamodel.PrescriptionType;
 
+import java.io.Serializable;
 import java.util.List;
 
-import rx.Observable;
+public class AccountAggregationTaskResponse implements Serializable {
+    public static final int RESULT_CODE_INVALID_CREDENTIALS = 401;
+    public static final int RESULT_CODE_SECONDARY_AUTH = 402;
+    public static final int RESULT_CODE_OTHER_AUTH_ERROR = 403;
+    public static final int RESULT_CODE_EXTRACTOR_SUCCESS = 200;
+    public static final int RESULT_CODE_LOGIN_SUCCESS = 200;
+    public static final int RESULT_CODE_INTERNAL_ERROR = 500;
+    public static final int RESULT_CODE_NETWORK_IO_ERROR = 501;
+    public static final int RESULT_CODE_UNEXPECTED_CONTENT = 502;
+    public static final int RESULT_CODE_UNEXPECTED_STATUS = 503;
+    public static final int RESULT_CODE_PROCESSING = 0;
+
+    public String taskId;
+    public String status;
+    public List<PrescriptionType> rxListResult;
+    public int resultCode;
+}
 
 /**
- * Created by Michael Ramirez on 5/29/15. Copyright 2015, Apothesource, Inc. All Rights Reserved.
+ {
+ "taskId": "b921432e-de6c-41bc-8934-917293d83b65",
+ "status": "WAITING",
+ "rxListResult": [],
+ "resultCode": 0
+ }
  */
-public interface PrescriptionService {
-    Observable<PrescriptionType> getPrescription(String rxId);
-    Observable<PrescriptionType> getPrescriptionWithRevId(String rxId, String revId);
-    Observable<PrescriptionType> getPrescriptions(List<String> rxIds);
-    Observable<PrescriptionType> enrichPrescriptions(PrescriptionType... rxList);
-    Observable<PrescriptionType> enrichPrescriptions(List<PrescriptionType> rxList);
-}

@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.service.drug.impl;
 
@@ -35,11 +37,11 @@ import com.apothesource.pillfill.datamodel.rxnorm.interaction.FullInteractionTyp
 import com.apothesource.pillfill.datamodel.rxnorm.interaction.InteractionConcept;
 import com.apothesource.pillfill.datamodel.rxnorm.interaction.InteractionPair;
 import com.apothesource.pillfill.datamodel.rxnorm.interaction.MinConceptItem;
-import com.apothesource.pillfill.network.PillFillSSLSocketFactory;
+import com.apothesource.pillfill.network.PFNetworkManager;
 import com.apothesource.pillfill.service.cache.CacheService;
 import com.apothesource.pillfill.service.cache.impl.DefaultNoOpCacheServiceImpl;
 import com.apothesource.pillfill.service.drug.DrugAlertService;
-import com.apothesource.pillfill.service.patient.PatientServiceParams;
+import com.apothesource.pillfill.service.PFServiceEndpoints;
 import static com.apothesource.pillfill.utilites.ReactiveUtils.subscribeIoObserveImmediate;
 import com.google.common.base.Joiner;
 
@@ -67,7 +69,6 @@ import java.util.logging.Logger;
 
 
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 public class DefaultDrugAlertServiceImpl implements DrugAlertService {
     public static final Type ALERT_LIST_TYPE = new TypeToken<ArrayList<DrugAlertType>>() {
@@ -117,7 +118,7 @@ public class DefaultDrugAlertServiceImpl implements DrugAlertService {
 
     private String getMrtdUrlString(Collection<PrescriptionType> activeRxList, float weightInKgs) {
         return String.format(
-                PatientServiceParams.MRTD_SERVICE_URL,
+                PFServiceEndpoints.MRTD_ALERT_URL,
                 Joiner.on("&ids=").join(
                         Observable.from(activeRxList)
                                 .map(PrescriptionType::getUuid)
@@ -158,7 +159,7 @@ public class DefaultDrugAlertServiceImpl implements DrugAlertService {
 
                 log.fine("Checking for drug alerts to URL: " + urlStr);
                 try {
-                    OkHttpClient client = PillFillSSLSocketFactory.getPinnedPFHttpClient();
+                    OkHttpClient client = PFNetworkManager.getPinnedPFHttpClient();
                     Request req = new Request.Builder().url(urlStr).build();
                     log.fine("Requesting MRTD calculations from server: " + urlStr);
                     
@@ -191,9 +192,9 @@ public class DefaultDrugAlertServiceImpl implements DrugAlertService {
                     subscriber.onCompleted();
                 } else {
                     String url = String.format(
-                            PatientServiceParams.DRUG_ALERT_URL, urlParam);
+                            PFServiceEndpoints.DRUG_ALERT_URL, urlParam);
                     log.fine(String.format("Checking for drug alerts to URL: %s", url));
-                    OkHttpClient client = PillFillSSLSocketFactory.getPinnedPFHttpClient();
+                    OkHttpClient client = PFNetworkManager.getPinnedPFHttpClient();
                     Request req = new Request.Builder().url(url).build();
                     
                     String response = client.newCall(req).execute().body().string();
@@ -230,7 +231,7 @@ public class DefaultDrugAlertServiceImpl implements DrugAlertService {
                 Collections.sort(cuiList);
                 String param = Joiner.on("+").join(cuiList);
                 final String url = String.format(
-                        PatientServiceParams.EXT_RXNORM_INTERACTIONS_URL, param);
+                        PFServiceEndpoints.EXT_RXNORM_INTERACTIONS_URL, param);
 
                 Optional<String> cachedResult = cache.getCachedData(url);
                 if (cachedResult.isPresent()) {

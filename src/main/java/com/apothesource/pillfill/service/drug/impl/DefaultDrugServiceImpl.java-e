@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.service.drug.impl;
 
@@ -34,10 +36,10 @@ import com.apothesource.pillfill.datamodel.spl.Pkg;
 import com.apothesource.pillfill.datamodel.spl.Product;
 import com.apothesource.pillfill.datamodel.spl.SplEntry;
 import com.apothesource.pillfill.datamodel.spl.SplInformation;
-import com.apothesource.pillfill.network.PillFillSSLSocketFactory;
+import com.apothesource.pillfill.network.PFNetworkManager;
 import com.apothesource.pillfill.service.PFBaseServiceContext;
 import com.apothesource.pillfill.service.drug.DrugService;
-import com.apothesource.pillfill.service.patient.PatientServiceParams;
+import com.apothesource.pillfill.service.PFServiceEndpoints;
 import com.apothesource.pillfill.utilites.ResourceUtil;
 import static com.apothesource.pillfill.utilites.ReactiveUtils.subscribeIoObserveImmediate;
 import com.google.common.base.Joiner;
@@ -132,7 +134,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
         return subscribeIoObserveImmediate(subscriber -> {
             String urlStr = String.format(URL_RXNORM_BRAND_NAME_BY_NDC, ndc);
             try{
-                String responseStr = PillFillSSLSocketFactory.doPinnedGetForUrl(urlStr);
+                String responseStr = PFNetworkManager.doPinnedGetForUrl(urlStr);
                 JsonParser parser = new JsonParser();
                 JsonObject response = parser.parse(responseStr).getAsJsonObject().get("idGroup").getAsJsonObject();
                 if (response.has("rxnormId")) {
@@ -160,10 +162,10 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
     public Observable<FullConcept> getNdfrtConceptsByUnii(String... uniis) {
         if (uniis == null || uniis.length == 0) return Observable.empty();
         String uniiList = Joiner.on("&ids=").join(uniis);
-        final String url = String.format(PatientServiceParams.NDFRT_BY_UNII_URL, uniiList);
+        final String url = String.format(PFServiceEndpoints.NDFRT_BY_UNII_URL, uniiList);
         return subscribeIoObserveImmediate(subscriber -> {
             try{
-                String response = PillFillSSLSocketFactory.doPinnedGetForUrl(url);
+                String response = PFNetworkManager.doPinnedGetForUrl(url);
                 List<FullConcept> concepts = gson.fromJson(response, NDFRT_LIST_TYPE);
                 Observable.from(concepts).forEach(subscriber::onNext);
                 subscriber.onCompleted();
@@ -185,12 +187,12 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
         if (splIdList == null || splIdList.length == 0) return Observable.empty();
 
         String splIdListString = Joiner.on("&ids=").join(splIdList);
-        String url = String.format(PatientServiceParams.SPL_INFO_URL,
+        String url = String.format(PFServiceEndpoints.SPL_INFO_URL,
                 splIdListString);
         Timber.d("Requesting SPL URL: %s");
         return subscribeIoObserveImmediate(subscriber -> {
            try{
-               String response = PillFillSSLSocketFactory.doPinnedGetForUrl(url);
+               String response = PFNetworkManager.doPinnedGetForUrl(url);
                List<SplInformation> list = gson.fromJson(response, SPL_LIST_TYPE);
                Observable.from(list).forEach(subscriber::onNext);
                subscriber.onCompleted();
@@ -213,11 +215,11 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
 
         String params = Joiner.on("&ids=").join(nuis);
         String url = String
-                .format(PatientServiceParams.NDFRT_INFO_URL, params);
+                .format(PFServiceEndpoints.NDFRT_INFO_URL, params);
         Timber.d("Requesting NDFRT URL: %s", url);
         return subscribeIoObserveImmediate(subscriber -> {
             try{
-                String response = PillFillSSLSocketFactory.doPinnedGetForUrl(url);
+                String response = PFNetworkManager.doPinnedGetForUrl(url);
                 List<FullConcept> concepts = gson.fromJson(response, NDFRT_LIST_TYPE);
                 Observable.from(concepts).forEach(subscriber::onNext);
                 subscriber.onCompleted();
@@ -242,7 +244,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
         Timber.d("Requesting %s list from URL: %s", typeName, url);
         return subscribeIoObserveImmediate(subscriber -> {
             try{
-                String listJson = PillFillSSLSocketFactory.doPinnedGetForUrl(url);
+                String listJson = PFNetworkManager.doPinnedGetForUrl(url);
                 JsonParser parser = new JsonParser();
                 JsonArray array = parser.parse(listJson).getAsJsonArray();
                 for(JsonElement elem : array){
@@ -285,7 +287,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
     private List<String> loadBrandNameDrug(final String rxnormId) throws IOException {
         final String rxNormUrlTemplate = "http://rxnav.nlm.nih.gov/REST/rxcui/%s/allrelated";
         final String urlString = String.format(rxNormUrlTemplate, rxnormId);
-        String response = PillFillSSLSocketFactory.doPinnedGetForUrl(urlString);
+        String response = PFNetworkManager.doPinnedGetForUrl(urlString);
         try {
             NodeList nl = (NodeList) XPATH_GET_DRUG_BN.evaluate(new InputSource(new StringReader(response)), XPathConstants.NODESET);
             ArrayList<String> retList = new ArrayList<>();
