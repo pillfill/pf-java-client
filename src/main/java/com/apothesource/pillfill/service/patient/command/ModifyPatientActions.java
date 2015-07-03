@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.service.patient.command;
 
@@ -29,11 +31,11 @@ import com.apothesource.pillfill.datamodel.PrescriptionType;
 import com.apothesource.pillfill.datamodel.UserDataType;
 import com.apothesource.pillfill.datamodel.android.PFPatientSync;
 import com.apothesource.pillfill.datamodel.android.SecurePatientTypeWrapper;
-import com.apothesource.pillfill.network.PillFillSSLSocketFactory;
+import com.apothesource.pillfill.network.PFNetworkManager;
 import com.apothesource.pillfill.service.patient.PatientService;
 import com.apothesource.pillfill.service.patient.impl.PatientServiceImpl;
-import com.apothesource.pillfill.service.patient.PatientServiceParams;
-import com.apothesource.pillfill.utilites.ReactiveUtils;
+import com.apothesource.pillfill.service.PFServiceEndpoints;
+
 import static com.apothesource.pillfill.utilites.ReactiveUtils.subscribeIoObserveImmediate;
 
 import com.google.gson.Gson;
@@ -358,7 +360,7 @@ public class ModifyPatientActions {
 
         @Override
         public Observable<ExecutionResult> doAction() {
-            mUpdateUrl = String.format(PatientServiceParams.PATIENT_UPDATE_URL, mPatientSvc.getAuthToken().getEmail());
+            mUpdateUrl = String.format(PFServiceEndpoints.PATIENT_UPDATE_URL, mPatientSvc.getAuthToken().getEmail());
             return subscribeIoObserveImmediate(subscriber -> {
                 log.fine("Syncing with server…");
                 try {
@@ -368,7 +370,7 @@ public class ModifyPatientActions {
                     if (patientData == null || patientData.isEmpty())
                         throw new RuntimeException("Patient document is null.");
                     
-                    OkHttpClient client = PillFillSSLSocketFactory.getPinnedPFHttpClient();
+                    OkHttpClient client = PFNetworkManager.getPinnedPFHttpClient();
                     
                     RequestBody reqBody = RequestBody.create(MediaType.parse("application/json"), patientData);
                     
