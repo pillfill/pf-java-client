@@ -78,7 +78,7 @@ public class DefaultPrescriptionServiceImplTest {
     }
 
     @Test
-    public void testRequestPrescriptionExtraction() throws Exception {
+    public void testRequestBadCredentialPrescriptionExtraction() throws Exception {
         Credential c = new Credential();
         c.setSource("CVS");
         c.setUsername("baduser@test.com");
