@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.service.drug.impl;
 
@@ -52,12 +54,12 @@ public class DefaultDrugServiceImplTest {
 
     }
 
-    @Test
+//    @Test
     public void testGetNdfrtConceptsByUnii() throws Exception {
         assertThat(defaultDrugServiceImpl.getNdfrtConceptsByUnii("362O9ITL9D").toBlocking().last().getConceptName(), is("ACETAMINOPHEN"));
     }
 
-    @Test
+//    @Test
     public void testGetNdfrtConceptsByBadUnii() throws Exception {
         defaultDrugServiceImpl.getNdfrtConceptsByUnii("XXXXXXXX").toBlocking().forEach(fullConcept -> fail("Bad UNII should not return a concept."));
     }
@@ -93,9 +95,9 @@ public class DefaultDrugServiceImplTest {
     public void testGetRxList() throws Exception {
         List<? extends PrescriptionType> rxList = defaultDrugServiceImpl
                 .getConceptList(new PrescriptionType().getClass(),
-                        "RX-00090D9ABEAFFDE010EAD13E8E845AF2232976A745C710F8801EC8F35BCD7494",
-                        "RX-00153170CDEC5571789987505799C59EB63C06BCC821B23E3D70A566F3F95A70",
-                        "RX-002C0ABB528855B112BD9E50282B19CD7A01A4E95657C3090BA6F6042BC89208")
+                        "00090D9ABEAFFDE010EAD13E8E845AF2232976A745C710F8801EC8F35BCD7494",
+                        "00153170CDEC5571789987505799C59EB63C06BCC821B23E3D70A566F3F95A70",
+                        "002C0ABB528855B112BD9E50282B19CD7A01A4E95657C3090BA6F6042BC89208")
                 .toList()
                 .toBlocking()
                 .first();

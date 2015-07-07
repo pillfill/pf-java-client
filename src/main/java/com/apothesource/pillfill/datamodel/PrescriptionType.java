@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.datamodel;
 
@@ -62,7 +64,6 @@ public class PrescriptionType implements Serializable {
     private Float quantityRemaining;
     private Date dispenseDate;
     private List<String> previousDispenseDates = new ArrayList<String>();
-    private List<String> linkedConditions = new ArrayList<String>();
     private String insuranceStatus;
     private String pharmacyPhone;
     private String prescriber;
@@ -87,8 +88,6 @@ public class PrescriptionType implements Serializable {
     private String source;
     private Date collectionDate;
     private Date serTime;
-    private DrugInformationType drugInformation;
-    private PrescriptionType insuranceReference;
     private Set<DrugAlertType> drugAlerts = new HashSet<>();
     private String uuid;
     private String _rev, _id;
@@ -716,42 +715,6 @@ public class PrescriptionType implements Serializable {
     /**
      * public getter
      *
-     * @returns com.pillfill.datamodel.DrugInformationType
-     */
-    public DrugInformationType getDrugInformation() {
-        return this.drugInformation;
-    }
-
-    /**
-     * public setter
-     *
-     * @param com.pillfill.datamodel.DrugInformationType
-     */
-    public void setDrugInformation(DrugInformationType drugInformation) {
-        this.drugInformation = drugInformation;
-    }
-
-    /**
-     * public getter
-     *
-     * @returns com.pillfill.datamodel.PrescriptionType
-     */
-    public PrescriptionType getInsuranceReference() {
-        return this.insuranceReference;
-    }
-
-    /**
-     * public setter
-     *
-     * @param com.pillfill.datamodel.PrescriptionType
-     */
-    public void setInsuranceReference(PrescriptionType insuranceReference) {
-        this.insuranceReference = insuranceReference;
-    }
-
-    /**
-     * public getter
-     *
      * @returns com.pillfill.datamodel.DrugAlertListType
      */
     public Set<DrugAlertType> getDrugAlerts() {
@@ -796,14 +759,6 @@ public class PrescriptionType implements Serializable {
 
     public int hashCode() {
         return uuid.hashCode();
-    }
-
-    public List<String> getLinkedConditions() {
-        return linkedConditions;
-    }
-
-    public void setLinkedConditions(List<String> linkedConditions) {
-        this.linkedConditions = linkedConditions;
     }
 
     public Date getComputedInactiveAfterDate() {

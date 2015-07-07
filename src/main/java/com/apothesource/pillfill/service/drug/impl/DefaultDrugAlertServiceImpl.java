@@ -119,7 +119,7 @@ public class DefaultDrugAlertServiceImpl implements DrugAlertService {
     private String getMrtdUrlString(Collection<PrescriptionType> activeRxList, float weightInKgs) {
         return String.format(
                 PFServiceEndpoints.MRTD_ALERT_URL,
-                Joiner.on("&ids=").join(
+                Joiner.on(",").join(
                         Observable.from(activeRxList)
                                 .map(PrescriptionType::getUuid)
                                 .toBlocking()
@@ -185,7 +185,7 @@ public class DefaultDrugAlertServiceImpl implements DrugAlertService {
             if (rx.getNdc() != null) ndcList.add(rx.getNdc());
         }
 
-        final String urlParam = Joiner.on("&ids=").join(rxList);
+        final String urlParam = Joiner.on(",").join(ndcList);
         return subscribeIoObserveImmediate(Observable.create(subscriber -> {
             try {
                 if (ndcList.isEmpty()) {
@@ -263,7 +263,7 @@ public class DefaultDrugAlertServiceImpl implements DrugAlertService {
         try {
             JsonObject returnValue = new JsonParser().parse(msg).getAsJsonObject();
             if (!returnValue.has("fullInteractionTypeGroup")) {
-                return new ArrayList();
+                return Collections.emptyList();
             } else {
                 Gson gson = new Gson();
                 TypeToken<List<FullInteractionTypeGroup>> interactionGroupListType = new TypeToken<List<FullInteractionTypeGroup>>() {
