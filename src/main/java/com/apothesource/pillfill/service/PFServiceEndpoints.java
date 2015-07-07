@@ -43,26 +43,26 @@ public class PFServiceEndpoints {
     public static final String DEVICE_BASE_URL = RX_SERVICES_URL + "/service/device/%s";
 
     //Drug Information Services
-    public static final String SPL_INFO_URL = DEVELOPER_BASE_URL + "/service/drugSplList?ids=%s";
-    public static final String NDFRT_BY_UNII_URL = DEVELOPER_BASE_URL + "/service/drugNdfrtListByUNII?ids=%s";
-    public static final String NDFRT_INFO_URL = DEVELOPER_BASE_URL + "/service/drugNdfrtList?ids=%s";
-    public static final String DRUG_ALERT_URL = DEVELOPER_BASE_URL + "/service/drugAlertList?ids=%s";
-    public static final String MRTD_ALERT_URL = DEVELOPER_BASE_URL + "/service/mrtdLoadCalculations?ids=%s&weightInKgs=%d";
+    public static final String SPL_INFO_URL = DEVELOPER_BASE_URL + "/service/v1/product/%s";
+    public static final String NDFRT_BY_UNII_URL = DEVELOPER_BASE_URL + "/service/v1/concepts?term=%s&type=ingredient";
+    public static final String NDFRT_INFO_URL = DEVELOPER_BASE_URL + "/service/v1/concept/%s";
+    public static final String DRUG_ALERT_URL = DEVELOPER_BASE_URL + "/service/v1/drug/%s/alerts";
+    public static final String MRTD_ALERT_URL = DEVELOPER_BASE_URL + "/service/v1/interactions/mrtd?ids=%s&weightInKgs=%d";
 
     //Pharmacy Services
-    public static final String PHARMACY_URL = DEVELOPER_BASE_URL + "/service/pharmacyList?ids=%s";
-    public static final String PHARMACY_SEARCH_URL = DEVELOPER_BASE_URL + "/service/pharmacies/search?keyword=%s&lat=%f&lng=%f&radius=%d&pgtoken=%s";
+    public static final String PHARMACY_URL = DEVELOPER_BASE_URL + "/service/v1/pharmacy/%s";
+    public static final String PHARMACY_SEARCH_URL = DEVELOPER_BASE_URL + "/service/v1/google-pharmacies/search?keyword=%s&lat=%f&lng=%f&radius=%d&pgtoken=%s";
     public static final String PHARMACY_GET_PLACE_URL = DEVELOPER_BASE_URL + "/service/pharmacy/googleplace?ref=%s";
 
     //Prescriber Services
-    public static final String PRESCRIBER_URL = DEVELOPER_BASE_URL + "/service/prescriberList?ids=%s";
-    public static final String PRESCRIBER_PHONE_SEARCH_URL = DEVELOPER_BASE_URL + "/service/prescribers/search?ph=%s";
-    public static final String PRESCRIBER_RX_HISTORY_URL = DEVELOPER_BASE_URL + "/service/prescriberRxHistory?id=%s";
-    public static final String PRESCRIBER_STATE_NAME_SEARCH_URL = DEVELOPER_BASE_URL + "/service/prescribers/search?st=%s&lName=%s&fName=%s";
+    public static final String PRESCRIBER_URL = DEVELOPER_BASE_URL + "/service/v1/prescriber/%s";
+    public static final String PRESCRIBER_PHONE_SEARCH_URL = DEVELOPER_BASE_URL + "/service/v1/prescribers/search?ph=%s";
+    public static final String PRESCRIBER_RX_HISTORY_URL = DEVELOPER_BASE_URL + "/service/v1/prescriber/%s/rx_history";
+    public static final String PRESCRIBER_STATE_NAME_SEARCH_URL = DEVELOPER_BASE_URL + "/service/v1/prescribers?st=%s&lName=%s&fName=%s";
 
     //Prescription Services
-    public static final String PRESCRIPTIONS_URL = DEVELOPER_BASE_URL + "/service/prescriptionList?ids=%s";
-    public static final String RX_ENRICH_URL = DEVELOPER_BASE_URL + "/service/enrichRxData";
+    public static final String PRESCRIPTIONS_URL = DEVELOPER_BASE_URL + "/service/v1/prescription/%s";
+    public static final String RX_ENRICH_URL = DEVELOPER_BASE_URL + "/service/v1/tasks/enrichmentTasks";
     public static final String RX_REQUEST_EXTRACT_URL = DEVELOPER_BASE_URL + "/service/v1/tasks/accountAggregationTasks";
     public static final String RX_EXTRACT_STATUS_URL = DEVELOPER_BASE_URL + "/service/v1/tasks/accountAggregationTask/%s";
 

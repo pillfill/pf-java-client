@@ -161,13 +161,13 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
     @Override
     public Observable<FullConcept> getNdfrtConceptsByUnii(String... uniis) {
         if (uniis == null || uniis.length == 0) return Observable.empty();
-        String uniiList = Joiner.on("&ids=").join(uniis);
+        String uniiList = Joiner.on(",").join(uniis);
         final String url = String.format(PFServiceEndpoints.NDFRT_BY_UNII_URL, uniiList);
         return subscribeIoObserveImmediate(subscriber -> {
             try{
                 String response = PFNetworkManager.doPinnedGetForUrl(url);
                 List<FullConcept> concepts = gson.fromJson(response, NDFRT_LIST_TYPE);
-                Observable.from(concepts).forEach(subscriber::onNext);
+                if(!concepts.isEmpty()) Observable.from(concepts).forEach(subscriber::onNext);
                 subscriber.onCompleted();
             } catch (IOException e) {
                 Timber.e("Couldn't get NDFRT concepts for UNIIs: %s", uniis.toString());
@@ -186,7 +186,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
     public Observable<SplInformation> getSplInformation(String... splIdList) {
         if (splIdList == null || splIdList.length == 0) return Observable.empty();
 
-        String splIdListString = Joiner.on("&ids=").join(splIdList);
+        String splIdListString = Joiner.on(",").join(splIdList);
         String url = String.format(PFServiceEndpoints.SPL_INFO_URL,
                 splIdListString);
         Timber.d("Requesting SPL URL: %s");
@@ -194,7 +194,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
            try{
                String response = PFNetworkManager.doPinnedGetForUrl(url);
                List<SplInformation> list = gson.fromJson(response, SPL_LIST_TYPE);
-               Observable.from(list).forEach(subscriber::onNext);
+               if(!list.isEmpty()) Observable.from(list).forEach(subscriber::onNext);
                subscriber.onCompleted();
            } catch (IOException e) {
                Timber.e("Error getting spl information for %s - %s", splIdList, e.getMessage());
@@ -213,7 +213,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
     public Observable<FullConcept> getNdfrtInformation(String... nuis) {
         if(nuis == null || nuis.length == 0) return Observable.empty();
 
-        String params = Joiner.on("&ids=").join(nuis);
+        String params = Joiner.on(",").join(nuis);
         String url = String
                 .format(PFServiceEndpoints.NDFRT_INFO_URL, params);
         Timber.d("Requesting NDFRT URL: %s", url);
@@ -221,7 +221,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
             try{
                 String response = PFNetworkManager.doPinnedGetForUrl(url);
                 List<FullConcept> concepts = gson.fromJson(response, NDFRT_LIST_TYPE);
-                Observable.from(concepts).forEach(subscriber::onNext);
+                if(!concepts.isEmpty()) Observable.from(concepts).forEach(subscriber::onNext);
                 subscriber.onCompleted();
             } catch (IOException e) {
                 Timber.e("Error getting NDFRT with NUI: %s - %s", nuis, e.getMessage());
@@ -275,7 +275,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
         return subscribeIoObserveImmediate(subscriber -> {
             try {
                 List<String> brandNames = loadBrandNameDrug(rxnormId);
-                Observable.from(brandNames).forEach(subscriber::onNext);
+                if(!brandNames.isEmpty()) Observable.from(brandNames).forEach(subscriber::onNext);
                 subscriber.onCompleted();
             } catch (Exception e) {
                 Timber.e(e, "Error accessing brand name for rxNormId: %s", rxnormId);

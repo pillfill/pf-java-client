@@ -396,7 +396,7 @@ public class DefaultPatientServiceImpl implements PatientServiceImpl {
                 //We need to load in increments of 100 so break up the request if it's larger
                 for (int i = 0; i < mRxIdList.size(); i += 100) {
                     List<String> rxIdSubset = mRxIdList.subList(i, (mRxIdList.size() >= i + 100) ? i + 100 : mRxIdList.size());
-                    String rxIdsParams = Joiner.on("&ids=").join(rxIdSubset);
+                    String rxIdsParams = Joiner.on(",").join(rxIdSubset);
                     String updateUrl = String.format(PFServiceEndpoints.PRESCRIPTIONS_URL, rxIdsParams);
                     try {
                         Request.Builder loadRequest = new Request.Builder().url(updateUrl);

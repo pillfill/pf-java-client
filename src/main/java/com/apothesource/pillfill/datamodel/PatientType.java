@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.datamodel;
 
@@ -46,10 +48,6 @@ public class PatientType implements Serializable {
 
     protected Date serTime;
     protected SecureUserDataBlock privatePatientData = new SecureUserDataBlock();
-    //Local data- Encrypted as part of the profile, but not visible on the backend
-    protected HashSet<String> allergicSubstancesUNIIs = new HashSet<String>();
-    protected HashSet<String> presentConditionsNUIs = new HashSet<String>();
-    protected HashSet<String> dismissedAlerts = new HashSet<String>(); //This also includes dismissed prescribers and pharmacies
     protected String _id, _rev;
     private ArrayList<String> providerIdList = new ArrayList<String>();
     private ArrayList<String> pharmacyIdList = new ArrayList<String>();
@@ -163,29 +161,6 @@ public class PatientType implements Serializable {
         this.privatePatientData = privatePatientData;
     }
 
-    public HashSet<String> getAllergicSubstancesUNIIs() {
-        return allergicSubstancesUNIIs;
-    }
-
-    public void setAllergicSubstancesUNIIs(HashSet<String> allergicSubstancesUNIIs) {
-        this.allergicSubstancesUNIIs = allergicSubstancesUNIIs;
-    }
-
-    public HashSet<String> getPresentConditionsNUIs() {
-        return presentConditionsNUIs;
-    }
-
-    public void setPresentConditionsNUIs(HashSet<String> presentConditionsNUIs) {
-        this.presentConditionsNUIs = presentConditionsNUIs;
-    }
-
-    public HashSet<String> getDismissedAlerts() {
-        return dismissedAlerts;
-    }
-
-    public void setDismissedAlerts(HashSet<String> dismissedAlerts) {
-        this.dismissedAlerts = dismissedAlerts;
-    }
 
     public Date getSerTime() {
         return serTime;
