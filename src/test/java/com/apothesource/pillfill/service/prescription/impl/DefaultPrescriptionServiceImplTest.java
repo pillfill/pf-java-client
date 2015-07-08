@@ -67,7 +67,7 @@ public class DefaultPrescriptionServiceImplTest {
     private void loadProperties(String propertyFile, boolean failOnError){
         try {
             loginInfo.load(DefaultPrescriptionServiceImplTest.class.getResourceAsStream(propertyFile));
-        } catch (IOException e) {
+        } catch (Exception e) {
             if(failOnError) throw new RuntimeException(e);
         }
     }

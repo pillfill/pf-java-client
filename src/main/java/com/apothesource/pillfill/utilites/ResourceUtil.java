@@ -67,9 +67,9 @@ public class ResourceUtil {
         if(resourceMappings.isEmpty()){
             synchronized(this){
                 try{
-                    InputStream urlResourceMappingStream = DefaultDrugServiceImpl.class.getResourceAsStream("/PFResourceMapping.properties");
+                    InputStream urlResourceMappingStream = ResourceUtil.class.getResourceAsStream("/PFResourceMapping.properties");
                     resourceMappings.load(urlResourceMappingStream);
-                    urlResourceMappingStream = DefaultDrugServiceImpl.class.getResourceAsStream("/credentials.properties");
+                    urlResourceMappingStream = ResourceUtil.class.getResourceAsStream("/credentials.properties");
                     resourceMappings.load(urlResourceMappingStream);
                 }catch(IOException e){
                     throw new RuntimeException(e.getMessage(), e);
