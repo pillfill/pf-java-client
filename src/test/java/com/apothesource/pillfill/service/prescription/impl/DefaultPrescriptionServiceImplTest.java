@@ -25,13 +25,9 @@
  */
 package com.apothesource.pillfill.service.prescription.impl;
 
-import com.apothesource.pillfill.ConditionalIgnoreRule;
-import com.apothesource.pillfill.ConditionalIgnoreRule.ConditionalIgnore;
-import com.apothesource.pillfill.ConditionalIgnoreRule.IgnoreCondition;
 import com.apothesource.pillfill.datamodel.PrescriptionType;
 import com.apothesource.pillfill.datamodel.aggregation.AccountAggregationTaskResponse;
 import com.apothesource.pillfill.datamodel.userdatatype.Credential;
-import com.apothesource.pillfill.utilites.ResourceUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -64,10 +60,15 @@ public class DefaultPrescriptionServiceImplTest {
 
 
     public DefaultPrescriptionServiceImplTest(){
+        loadProperties("/credentials.properties", true);
+        loadProperties("/private_credentials.properties", false);
+    }
+
+    private void loadProperties(String propertyFile, boolean failOnError){
         try {
-            loginInfo.load(DefaultPrescriptionServiceImplTest.class.getResourceAsStream("/test_credentials.properties"));
+            loginInfo.load(DefaultPrescriptionServiceImplTest.class.getResourceAsStream(propertyFile));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            if(failOnError) throw new RuntimeException(e);
         }
     }
 

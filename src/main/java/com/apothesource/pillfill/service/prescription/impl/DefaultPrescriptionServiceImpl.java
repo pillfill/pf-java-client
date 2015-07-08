@@ -97,7 +97,7 @@ public class DefaultPrescriptionServiceImpl implements PrescriptionService {
                     int batchSize = (rxIds.size() - idx > 100) ? 100 : rxIds.size() - idx;
                     List<String> reqList = rxIds.subList(idx, idx + batchSize);
                     final String url = String.format(PFServiceEndpoints.PRESCRIPTIONS_URL,
-                            Joiner.on(",").skipNulls().join(reqList));
+                            Joiner.on("%2C").skipNulls().join(reqList));
                     log.info(String.format("Requesting url: %s", url));
                     try {
                         OkHttpClient connection = PFNetworkManager.getPinnedPFHttpClient();

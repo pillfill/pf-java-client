@@ -58,7 +58,19 @@ retrolambda {
 configurations {
     provided
 }
-
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.apothesource.pillfill.CommandlineClient'
+    }
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+        configurations.runtime.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
 sourceSets {
     main {
         compileClasspath += configurations.provided
