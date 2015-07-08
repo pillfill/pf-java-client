@@ -49,10 +49,11 @@ repositories {
     mavenLocal()
     jcenter()
 }
+
 retrolambda {
-    oldJdk "/usr/libexec/java_home -v1.7".execute().text.trim()
-    defaultMethods false
-    incremental true
+    jdk System.getenv("JAVA8_HOME")
+    oldJdk System.getenv("JAVA7_HOME")
+    javaVersion JavaVersion.VERSION_1_7
 }
 
 configurations {
