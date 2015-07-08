@@ -52,11 +52,11 @@ public class ResourceUtil {
             synchronized(this){
                 pfApiKey = System.getProperty("pfApiKey");
             }
-            if(pfApiKey == null){
+            if(pfApiKey == null || pfApiKey.isEmpty()){
                 pfApiKey = getMappingResources().getProperty("pfApiKey");
             }
         }
-        if(pfApiKey == null){
+        if(pfApiKey == null || pfApiKey.isEmpty()){
             throw new RuntimeException("PillFill API key not set.");
         }else{
             return pfApiKey;

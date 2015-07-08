@@ -7,3 +7,4 @@ PFJavaClient.iml
 .nb-gradle
 gradle
 src/test/resources/private_credentials.properties
+src/test/resources/credentials.properties
