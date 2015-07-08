@@ -44,7 +44,7 @@ public class PFServiceEndpoints {
 
     //Drug Information Services
     public static final String SPL_INFO_URL = DEVELOPER_BASE_URL + "/service/v1/product/%s";
-    public static final String NDFRT_BY_UNII_URL = DEVELOPER_BASE_URL + "/service/v1/concepts?term=%s&type=ingredient";
+    public static final String NDFRT_BY_UNII_URL = DEVELOPER_BASE_URL + "/service/v1/medications/%s";
     public static final String NDFRT_INFO_URL = DEVELOPER_BASE_URL + "/service/v1/concept/%s";
     public static final String DRUG_ALERT_URL = DEVELOPER_BASE_URL + "/service/v1/drug/%s/alerts";
     public static final String MRTD_ALERT_URL = DEVELOPER_BASE_URL + "/service/v1/interactions/mrtd?ids=%s&weightInKgs=%d";

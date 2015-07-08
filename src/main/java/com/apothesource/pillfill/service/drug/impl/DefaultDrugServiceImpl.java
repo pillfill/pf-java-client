@@ -25,6 +25,8 @@
  */
 package com.apothesource.pillfill.service.drug.impl;
 
+import com.apothesource.pillfill.datamodel.DrugAlertType;
+import com.apothesource.pillfill.datamodel.DrugInformation;
 import com.apothesource.pillfill.datamodel.PrescriptionType;
 import com.apothesource.pillfill.datamodel.SplSearchResultEntry;
 import com.apothesource.pillfill.datamodel.ndfrt.Concept;
@@ -166,8 +168,10 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
         return subscribeIoObserveImmediate(subscriber -> {
             try{
                 String response = PFNetworkManager.doPinnedGetForUrl(url);
-                List<FullConcept> concepts = gson.fromJson(response, NDFRT_LIST_TYPE);
-                if(!concepts.isEmpty()) Observable.from(concepts).forEach(subscriber::onNext);
+                List<DrugInformation> drugInformation = gson.fromJson(response, DRUGINFO_LIST_TYPE);
+                if(!drugInformation.isEmpty()){
+                    Observable.from(drugInformation.get(0).concepts).forEach(subscriber::onNext);
+                }
                 subscriber.onCompleted();
             } catch (IOException e) {
                 Timber.e("Couldn't get NDFRT concepts for UNIIs: %s", uniis.toString());
@@ -427,5 +431,4 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
         }
         return retList;
     }
-
 }

@@ -56,13 +56,11 @@ public class DefaultDrugServiceImplTest {
     }
 
     @Test
-    @Ignore("Service needs to be added on the server first.")
     public void testGetNdfrtConceptsByUnii() throws Exception {
         assertThat(defaultDrugServiceImpl.getNdfrtConceptsByUnii("362O9ITL9D").toBlocking().last().getConceptName(), is("ACETAMINOPHEN"));
     }
 
     @Test
-    @Ignore("Service needs to be added on the server first.")
     public void testGetNdfrtConceptsByBadUnii() throws Exception {
         defaultDrugServiceImpl.getNdfrtConceptsByUnii("XXXXXXXX").toBlocking().forEach(fullConcept -> fail("Bad UNII should not return a concept."));
     }
