@@ -1,25 +1,27 @@
-/* 
- * The MIT License
+/*
  *
- * Copyright 2015 Apothesource, Inc.
+ *  * The MIT License
+ *  *
+ *  * Copyright {$YEAR} Apothesource, Inc.
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in
+ *  * all copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  * THE SOFTWARE.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package com.apothesource.pillfill.service.device.impl;
 
@@ -50,13 +52,13 @@ public class DefaultDeviceManagerServiceImplTest {
         deviceCount = 0;
         impl.getDeviceWithUUID(deviceIds).subscribe(userDevice -> {
             assertNotNull(userDevice.getDeviceId());
-            log.info(gson.toJson(userDevice));
+            log.fine(gson.toJson(userDevice));
             deviceCount++;
         }, throwable -> {
             throw new RuntimeException(throwable);
         }, () -> {
             assert (deviceCount == deviceIds.length);
-            log.log(Level.INFO, "Device count: {0}", deviceCount);
+            log.log(Level.FINE, "Device count: {0}", deviceCount);
         });
     }
 
@@ -66,7 +68,7 @@ public class DefaultDeviceManagerServiceImplTest {
         UserDevice device = impl.getDeviceWithUUID(deviceIds).toBlocking().first();
         deviceCount = 0;
         impl.addUpdateDevice(device, "test").subscribe(wsResponse -> {
-            log.info(gson.toJson(wsResponse));
+            log.fine(gson.toJson(wsResponse));
             if (wsResponse.device != null) deviceCount++;
             else fail();
         }, throwable -> {
@@ -84,13 +86,13 @@ public class DefaultDeviceManagerServiceImplTest {
             if (userDevice != null) {
                 throw new RuntimeException("Received device object when using bad UUID");
             } else {
-                log.info("Received expected null response.");
+                log.fine("Received expected null response.");
             }
         }, throwable -> {
-            log.log(Level.INFO, "Bad UUID response: {0}", throwable);
+            log.log(Level.FINE, "Bad UUID response: {0}", throwable);
         }, () -> {
             assert (deviceCount == 0);
-            log.log(Level.INFO, "Device count: {0}", deviceCount);
+            log.log(Level.FINE, "Device count: {0}", deviceCount);
         });
     }
 }
