@@ -21,9 +21,15 @@ Command Line
 You can invoke the CommandLine interface by running the library as an executable Jar:
 
 Example: Export your CVS prescription information:
- `java -jar pf-java-client-* extract apikey=MYAPIKEY123 username=myusername@example.com password=MyPassWord1 type=CVS`
+
+  `java -jar pf-java-client-* extract apikey=MYAPIKEY123 username=myusername@example.com password=MyPassWord1 type=CVS`
+
+Example: Get production information about drug with NDC '00555078802':
+
+  `java -jar pf-java-client-* info apikey=MYAPIKEY123 ids=00555078802`
 
 Example: Get more information about concept 'N022111124':
+
   `java -jar pf-java-client-* info apikey=MYAPIKEY123 ids=N022111124`
 
 (You can also invoke `com.apothesource.pillfill.CommandLine` directly if you'd prefer)
