@@ -25,7 +25,6 @@
  */
 package com.apothesource.pillfill.service.drug.impl;
 
-import com.apothesource.pillfill.datamodel.DrugAlertType;
 import com.apothesource.pillfill.datamodel.DrugInformation;
 import com.apothesource.pillfill.datamodel.PrescriptionType;
 import com.apothesource.pillfill.datamodel.SplSearchResultEntry;
@@ -80,7 +79,6 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
     private static Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd").create();
     private final XPathExpression XPATH_GET_DRUG_BN;
     private final Properties urlToTypeMapping;
-    private final String apiKey;
 
     public Comparator<SplSearchResultEntry> scoreComparator = (lhs, rhs) -> {
         try {
@@ -96,7 +94,6 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
     public DefaultDrugServiceImpl() {
         XPath path = XPathFactory.newInstance().newXPath();
         urlToTypeMapping = ResourceUtil.getInstance().getMappingResources();
-        apiKey = ResourceUtil.getInstance().getPFApiKey();
         try {
             XPATH_GET_DRUG_BN = path.compile("//conceptGroup[tty[text()='SBD']]/conceptProperties/synonym/text()");
         } catch (XPathExpressionException e) {
@@ -162,49 +159,27 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
      */
     @Override
     public Observable<FullConcept> getNdfrtConceptsByUnii(String... uniis) {
-        if (uniis == null || uniis.length == 0) return Observable.empty();
-        String uniiList = Joiner.on(",").join(uniis);
-        final String url = String.format(PFServiceEndpoints.NDFRT_BY_UNII_URL, uniiList);
-        return subscribeIoObserveImmediate(subscriber -> {
-            try{
-                String response = PFNetworkManager.doPinnedGetForUrl(url);
-                List<DrugInformation> drugInformation = gson.fromJson(response, DRUGINFO_LIST_TYPE);
-                if(!drugInformation.isEmpty()){
-                    Observable.from(drugInformation.get(0).concepts).forEach(subscriber::onNext);
-                }
-                subscriber.onCompleted();
-            } catch (IOException e) {
-                Timber.e("Couldn't get NDFRT concepts for UNIIs: %s", uniis.toString());
-                subscriber.onError(e);
-            }
-        });
+        return getConceptsByIds(uniis);
+    }
+
+
+    public Observable<FullConcept> getConceptsByIds(String... ids) {
+        return getDrugInformation(ids)
+                .filter(drugInfo -> !drugInfo.concepts.isEmpty())
+                .flatMap(drugInfo ->  Observable.from(drugInfo.concepts));
     }
 
     /**
      * Retrieve {@link SplInformation} for the provided SPL (FDA's Standard Packaging Label) Drug IDs. Each {@link SplInformation} instance represents a specific product & package on the US Drug Market (both OTC & RX). The class includes basic patient-focused drug information, ingredients, strengths, etc.
-     * @param splIdList The list of SPL IDs to lookup
+     * @param ids The list of SPL IDs to lookup
      * @return An observable that emits a {@link SplInformation} instance for each drug
      * @see SplEntry
      */
     @Override
-    public Observable<SplInformation> getSplInformation(String... splIdList) {
-        if (splIdList == null || splIdList.length == 0) return Observable.empty();
-
-        String splIdListString = Joiner.on(",").join(splIdList);
-        String url = String.format(PFServiceEndpoints.SPL_INFO_URL,
-                splIdListString);
-        Timber.d("Requesting SPL URL: %s");
-        return subscribeIoObserveImmediate(subscriber -> {
-           try{
-               String response = PFNetworkManager.doPinnedGetForUrl(url);
-               List<SplInformation> list = gson.fromJson(response, SPL_LIST_TYPE);
-               if(!list.isEmpty()) Observable.from(list).forEach(subscriber::onNext);
-               subscriber.onCompleted();
-           } catch (IOException e) {
-               Timber.e("Error getting spl information for %s - %s", splIdList, e.getMessage());
-               subscriber.onError(e);
-           }
-        });
+    public Observable<SplEntry> getSplInformation(String... ids) {
+        return getDrugInformation(ids)
+                .filter(drugInfo -> !drugInfo.products.isEmpty())
+                .flatMap(drugInfo -> Observable.from(drugInfo.products));
 
     }
 
@@ -215,23 +190,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
      */
     @Override
     public Observable<FullConcept> getNdfrtInformation(String... nuis) {
-        if(nuis == null || nuis.length == 0) return Observable.empty();
-
-        String params = Joiner.on(",").join(nuis);
-        String url = String
-                .format(PFServiceEndpoints.NDFRT_INFO_URL, params);
-        Timber.d("Requesting NDFRT URL: %s", url);
-        return subscribeIoObserveImmediate(subscriber -> {
-            try{
-                String response = PFNetworkManager.doPinnedGetForUrl(url);
-                List<FullConcept> concepts = gson.fromJson(response, NDFRT_LIST_TYPE);
-                if(!concepts.isEmpty()) Observable.from(concepts).forEach(subscriber::onNext);
-                subscriber.onCompleted();
-            } catch (IOException e) {
-                Timber.e("Error getting NDFRT with NUI: %s - %s", nuis, e.getMessage());
-                subscriber.onError(e);
-            }
-        });
+        return getConceptsByIds(nuis);
     }
 
     /**
@@ -291,8 +250,8 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
     @Override
     public Observable<DrugInformation> getDrugInformation(String... ids) {
         if (ids== null || ids.length == 0) return Observable.empty();
-        String uniiList = Joiner.on(",").join(ids);
-        final String url = String.format(PFServiceEndpoints.NDFRT_BY_UNII_URL, uniiList);
+        String idList = Joiner.on(",").join(ids);
+        final String url = String.format(PFServiceEndpoints.DRUG_INFO_URL, idList);
         return subscribeIoObserveImmediate(subscriber -> {
             try{
                 String response = PFNetworkManager.doPinnedGetForUrl(url);

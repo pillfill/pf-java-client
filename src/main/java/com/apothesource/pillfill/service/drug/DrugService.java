@@ -31,6 +31,7 @@ import com.apothesource.pillfill.datamodel.SplSearchResultEntry;
 import com.apothesource.pillfill.datamodel.android.GenericDrugPriceMapping;
 import com.apothesource.pillfill.datamodel.ndfrt.Concept;
 import com.apothesource.pillfill.datamodel.ndfrt.FullConcept;
+import com.apothesource.pillfill.datamodel.spl.SplEntry;
 import com.apothesource.pillfill.datamodel.spl.SplInformation;
 import com.google.gson.reflect.TypeToken;
 
@@ -81,7 +82,7 @@ public interface DrugService {
      * @param splIdList A list of SplIds to retrieve
      * @return A stream of SplInformation objects associated with the splIds.
      */
-    Observable<SplInformation> getSplInformation(String... splIdList);
+    Observable<SplEntry> getSplInformation(String... splIdList);
 
     /**
      * Calls to the PF server to retrieve a set of <a href="http://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/VANDF/">National Drug File</a> concepts by concept ID(NUI).

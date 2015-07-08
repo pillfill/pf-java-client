@@ -116,7 +116,7 @@ public class PatientLoginService {
         Arrays.fill(salt, (byte) 0);
 
         SecretKey newKey = jn.keyForPassword(concat, salt); //PBKDF2 10K Iterations
-        return BaseEncoding.base64().encode(newKey.getEncoded());
+        return BaseEncoding.base64Url().omitPadding().encode(newKey.getEncoded());
     }
 
     public interface LoginStatusListener {

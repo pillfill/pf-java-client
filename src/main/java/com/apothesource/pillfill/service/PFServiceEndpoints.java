@@ -30,12 +30,15 @@ public class PFServiceEndpoints {
     public static final String RX_SERVICES_URL = "https://rxservices.pill-fill.com";
 
     //Patient-specific services
-    public static final String BASE_PATIENT_URL = DEVELOPER_BASE_URL + "/service/patient/%s";
-    public static final String CHECK_USERNAME_URL = BASE_PATIENT_URL + "/checkAvailable?username=%s";
-    public static final String PATIENT_UPDATE_URL = BASE_PATIENT_URL + "?doConsistencyCheck=false";
-    public static final String PWD_LOGIN_URL = DEVELOPER_BASE_URL + "/service/login/pfaccount?id=%s&pwdHash=%s";
-    public static final String CODE_URL = DEVELOPER_BASE_URL + "/service/login/oauth/verify?code=%s";
-    public static final String ANONYMOUS_TOKEN_URL = DEVELOPER_BASE_URL + "/service/anonymousAccount";
+    public static final String BASE_PATIENT_URL = DEVELOPER_BASE_URL + "/service/v1/patients/%s"; //Base URL to retrieve a patient document
+    public static final String CHECK_USERNAME_URL = BASE_PATIENT_URL + "/checkAvailable?username=%s"; //Check if a username is available
+    public static final String PATIENT_UPDATE_URL = BASE_PATIENT_URL + "?doConsistencyCheck=false"; //Update a patient and skip the monotonicity check
+    public static final String CODE_URL = DEVELOPER_BASE_URL + "/service/v1/patients?code=%s"; //For Linking Account to Social Media (e.g. Google)
+
+
+    //Auth Token Services
+    public static final String PWD_LOGIN_URL = DEVELOPER_BASE_URL + "/service/v1/authTokens/%s?pwdHash=%s"; //Get an authToken for an existing account using a username/password
+    public static final String ANONYMOUS_TOKEN_URL = DEVELOPER_BASE_URL + "/service/v1/authTokens/anonymous"; //Url to generate a new AuthToken (i.e. create a new account)
 
     //Reminder Services
     public static final String REMINDER_BASE_URL = RX_SERVICES_URL + "/service/rx/%s/reminders";
@@ -43,28 +46,26 @@ public class PFServiceEndpoints {
     public static final String DEVICE_BASE_URL = RX_SERVICES_URL + "/service/device/%s";
 
     //Drug Information Services
-    public static final String SPL_INFO_URL = DEVELOPER_BASE_URL + "/service/v1/product/%s";
-    public static final String NDFRT_BY_UNII_URL = DEVELOPER_BASE_URL + "/service/v1/medications/%s";
-    public static final String NDFRT_INFO_URL = DEVELOPER_BASE_URL + "/service/v1/concept/%s";
+    public static final String DRUG_INFO_URL = DEVELOPER_BASE_URL + "/service/v1/medications/%s";
     public static final String DRUG_ALERT_URL = DEVELOPER_BASE_URL + "/service/v1/drug/%s/alerts";
     public static final String MRTD_ALERT_URL = DEVELOPER_BASE_URL + "/service/v1/interactions/mrtd?ids=%s&weightInKgs=%d";
 
     //Pharmacy Services
-    public static final String PHARMACY_URL = DEVELOPER_BASE_URL + "/service/v1/pharmacy/%s";
-    public static final String PHARMACY_SEARCH_URL = DEVELOPER_BASE_URL + "/service/v1/google-pharmacies/search?keyword=%s&lat=%f&lng=%f&radius=%d&pgtoken=%s";
-    public static final String PHARMACY_GET_PLACE_URL = DEVELOPER_BASE_URL + "/service/pharmacy/googleplace?ref=%s";
+    public static final String PHARMACY_URL = DEVELOPER_BASE_URL + "/service/v1/pharmacies/%s";
+    public static final String PHARMACY_SEARCH_URL = DEVELOPER_BASE_URL + "/service/v1/pharmacies?keyword=%s&lat=%f&lng=%f&radius=%d&pgtoken=%s";
+    public static final String PHARMACY_GET_PLACE_URL = DEVELOPER_BASE_URL + "/service/pharmacies/googleplace?ref=%s";
 
     //Prescriber Services
-    public static final String PRESCRIBER_URL = DEVELOPER_BASE_URL + "/service/v1/prescriber/%s";
+    public static final String PRESCRIBER_URL = DEVELOPER_BASE_URL + "/service/v1/prescribers/%s";
     public static final String PRESCRIBER_PHONE_SEARCH_URL = DEVELOPER_BASE_URL + "/service/v1/prescribers/search?ph=%s";
-    public static final String PRESCRIBER_RX_HISTORY_URL = DEVELOPER_BASE_URL + "/service/v1/prescriber/%s/rx_history";
+    public static final String PRESCRIBER_RX_HISTORY_URL = DEVELOPER_BASE_URL + "/service/v1/prescribers/%s/rx_history";
     public static final String PRESCRIBER_STATE_NAME_SEARCH_URL = DEVELOPER_BASE_URL + "/service/v1/prescribers?st=%s&lName=%s&fName=%s";
 
     //Prescription Services
-    public static final String PRESCRIPTIONS_URL = DEVELOPER_BASE_URL + "/service/v1/prescription/%s";
+    public static final String PRESCRIPTIONS_URL = DEVELOPER_BASE_URL + "/service/v1/prescriptions/%s";
     public static final String RX_ENRICH_URL = DEVELOPER_BASE_URL + "/service/v1/tasks/enrichmentTasks";
     public static final String RX_REQUEST_EXTRACT_URL = DEVELOPER_BASE_URL + "/service/v1/tasks/accountAggregationTasks";
-    public static final String RX_EXTRACT_STATUS_URL = DEVELOPER_BASE_URL + "/service/v1/tasks/accountAggregationTask/%s";
+    public static final String RX_EXTRACT_STATUS_URL = DEVELOPER_BASE_URL + "/service/v1/tasks/accountAggregationTasks/%s";
 
 
     //NIH Drug Information Services
