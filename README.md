@@ -23,21 +23,19 @@ Command Line Tool
 
 You can invoke the CommandLine interface by running the library as an executable Jar:
 
-Example: _Get product information about drug with NDC '00555078802'_:
+Example: **Get product information about drug with NDC '00555078802'**:
 
   `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=00555078802`
 
-Example: _Get concept information about *National Drug File* ID 'N022111124'_:
+Example: **Get concept information about *National Drug File* ID 'N022111124'**:
 
   `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=N022111124`
 
-Example: _Export your prescription information from your pharmacy_:
+Example: **Export your prescription information from your pharmacy**:
 
   `java -jar pf-java-client-* extract apikey=[YOUR_API_KEY] username=[YOUR_CVS_LOGIN] password=[YOUR_CVS_PASSWORD] type=CVS outfile=rx-export.json`
 
-  (The secure extraction process is described in more detail <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">in the PrescriptionService documentation.</a>)
-
-(You can also invoke `com.apothesource.pillfill.CommandLine` directly if you'd prefer it that way)
+The export process is described in more detail <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">in the PrescriptionService documentation.</a>
 
 Primary Features & Services
 -------
@@ -65,7 +63,7 @@ DrugAlertService offers methods to check for FDA Alerts (Drug <a href="http://ww
 Each instance of this service represents a <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/datamodel/PatientType.java">single patient</a>. It is responsible for managing the Rx lists for an individual
 and syncing to/from the server. It ensures that sensitive information about the user is encrypted before it is synced to the server.
 
-##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">PatientServiceLocator</a>
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">PrescriptionService</a>
 
 Prescription service coordinates the task of doing Pharmacy/Insurance account information extraction and managing the prescriptions that are retrieved.
 
