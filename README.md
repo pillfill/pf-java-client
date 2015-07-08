@@ -2,6 +2,8 @@
 
 ![PillFill](logo.png)
 
+[![Build Status](https://travis-ci.org/rammic/pf-java-client.svg?branch=master)](https://travis-ci.org/rammic/pf-java-client)
+
 This library aims to make building mHealth applications easier. It serves as the base of the <a href="https://play.google.com/store/apps/details?id=com.apothesource.pillfill.android">PillFill Android Application</a>.
 
 We're focused on three areas:
