@@ -33,56 +33,60 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- *
  * @author Michael Ramirez (michael@pillfill.com)
  */
 public class ResourceUtil {
     private static final ResourceUtil singleton = new ResourceUtil();
     private String pfApiKey = null;
     private final Properties resourceMappings = new Properties();
-    
-    private ResourceUtil(){}
-    
-    public static ResourceUtil getInstance(){
+
+    private ResourceUtil() {
+    }
+
+    public static ResourceUtil getInstance() {
         return singleton;
     }
-    
-    public String getPFApiKey(){
-        if(pfApiKey == null){
-            synchronized(this){
+
+    public String getPFApiKey() {
+        synchronized (this) {
+            if (pfApiKey == null) {
                 pfApiKey = System.getProperty("pfApiKey");
-                if(pfApiKey == null) pfApiKey = System.getenv("pfApiKey");
+                if (pfApiKey == null || pfApiKey.isEmpty()) {
+                    pfApiKey = System.getenv("pfApiKey");
+                }
+                if (pfApiKey == null || pfApiKey.isEmpty()) {
+                    pfApiKey = getMappingResources().getProperty("pfApiKey");
+                }
             }
-            if(pfApiKey == null || pfApiKey.isEmpty()){
-                pfApiKey = getMappingResources().getProperty("pfApiKey");
+            if (pfApiKey == null || pfApiKey.isEmpty()) {
+                throw new RuntimeException("PillFill API key not set.");
+            } else {
+                return pfApiKey;
             }
         }
-        if(pfApiKey == null || pfApiKey.isEmpty()){
-            throw new RuntimeException("PillFill API key not set.");
-        }else{
-            return pfApiKey;
-        }
+
     }
-    public Properties getMappingResources(){
-        if(resourceMappings.isEmpty()){
-            synchronized(this){
-                try{
+
+    public Properties getMappingResources() {
+        if (resourceMappings.isEmpty()) {
+            synchronized (this) {
+                try {
                     InputStream urlResourceMappingStream = ResourceUtil.class.getResourceAsStream("/PFResourceMapping.properties");
                     resourceMappings.load(urlResourceMappingStream);
                     urlResourceMappingStream = ResourceUtil.class.getResourceAsStream("/credentials.properties");
                     resourceMappings.load(urlResourceMappingStream);
-                }catch(IOException e){
+                } catch (IOException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
-                try{
+                try {
                     InputStream urlResourceMappingStream = DefaultDrugServiceImpl.class.getResourceAsStream("/private_credentials.properties");
                     resourceMappings.load(urlResourceMappingStream);
-                }catch(Exception e){
+                } catch (Exception e) {
                     Timber.w("Could not find private_credentials.properties so it won't be loaded.");
                 }
             }
         }
-        
+
         return resourceMappings;
     }
 
