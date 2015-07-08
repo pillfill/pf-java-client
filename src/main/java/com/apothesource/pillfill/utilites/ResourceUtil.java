@@ -51,6 +51,7 @@ public class ResourceUtil {
         if(pfApiKey == null){
             synchronized(this){
                 pfApiKey = System.getProperty("pfApiKey");
+                if(pfApiKey == null) pfApiKey = System.getenv("pfApiKey");
             }
             if(pfApiKey == null || pfApiKey.isEmpty()){
                 pfApiKey = getMappingResources().getProperty("pfApiKey");
