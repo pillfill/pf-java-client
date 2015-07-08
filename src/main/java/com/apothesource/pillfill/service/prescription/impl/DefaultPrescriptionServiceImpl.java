@@ -40,6 +40,7 @@ import com.google.common.base.Joiner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -131,7 +132,7 @@ public class DefaultPrescriptionServiceImpl implements PrescriptionService {
     public Observable<AccountAggregationTaskResponse> requestPrescriptionExtraction(Credential c, Point location) {
         AccountAggregationTaskRequest request = new AccountAggregationTaskRequest();
         request.datasource = c.getSource();
-        request.username = c.getPassword();
+        request.username = c.getUsername();
         request.location = location;
         request.dob = c.getDob();
         request.password = c.getPassword();
@@ -165,13 +166,19 @@ public class DefaultPrescriptionServiceImpl implements PrescriptionService {
             Request req = new Request.Builder()
                     .url(statusUrl)
                     .build();
+
+            String responseStr = null;
             try {
                 Response res = client.newCall(req).execute();
-                AccountAggregationTaskResponse response = gson.fromJson(res.body().charStream(), AccountAggregationTaskResponse.class);
+                responseStr = res.body().string();
+                AccountAggregationTaskResponse response = gson.fromJson(responseStr, AccountAggregationTaskResponse.class);
                 subscriber.onNext(response);
                 subscriber.onCompleted();
             } catch (IOException e) {
                 Timber.e(e, "Error requesting extract status from server.");
+                subscriber.onError(e);
+            } catch(JsonParseException e){
+                Timber.e(e, "Unexpected response from the server: %s", responseStr);
                 subscriber.onError(e);
             }
         });

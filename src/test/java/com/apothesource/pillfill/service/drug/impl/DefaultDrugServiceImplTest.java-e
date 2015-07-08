@@ -30,6 +30,7 @@ import com.apothesource.pillfill.datamodel.ndfrt.FullConcept;
 import com.apothesource.pillfill.datamodel.spl.SplInformation;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -54,12 +55,14 @@ public class DefaultDrugServiceImplTest {
 
     }
 
-//    @Test
+    @Test
+    @Ignore("Service needs to be added on the server first.")
     public void testGetNdfrtConceptsByUnii() throws Exception {
         assertThat(defaultDrugServiceImpl.getNdfrtConceptsByUnii("362O9ITL9D").toBlocking().last().getConceptName(), is("ACETAMINOPHEN"));
     }
 
-//    @Test
+    @Test
+    @Ignore("Service needs to be added on the server first.")
     public void testGetNdfrtConceptsByBadUnii() throws Exception {
         defaultDrugServiceImpl.getNdfrtConceptsByUnii("XXXXXXXX").toBlocking().forEach(fullConcept -> fail("Bad UNII should not return a concept."));
     }

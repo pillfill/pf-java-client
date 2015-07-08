@@ -25,21 +25,29 @@
  */
 package com.apothesource.pillfill.service.prescription.impl;
 
+import com.apothesource.pillfill.ConditionalIgnoreRule;
+import com.apothesource.pillfill.ConditionalIgnoreRule.ConditionalIgnore;
+import com.apothesource.pillfill.ConditionalIgnoreRule.IgnoreCondition;
 import com.apothesource.pillfill.datamodel.PrescriptionType;
 import com.apothesource.pillfill.datamodel.aggregation.AccountAggregationTaskResponse;
 import com.apothesource.pillfill.datamodel.userdatatype.Credential;
+import com.apothesource.pillfill.utilites.ResourceUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.junit.Assume;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import rx.Subscription;
 import rx.observers.TestSubscriber;
+import timber.log.Timber;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -52,6 +60,16 @@ import static org.junit.Assert.assertTrue;
 public class DefaultPrescriptionServiceImplTest {
     private static final Logger log = Logger.getAnonymousLogger();
     private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+    private static final Properties loginInfo = new Properties();
+
+
+    public DefaultPrescriptionServiceImplTest(){
+        try {
+            loginInfo.load(DefaultPrescriptionServiceImplTest.class.getResourceAsStream("/test_credentials.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Test
     public void testLoadPrescriptions() throws Exception {
@@ -78,11 +96,61 @@ public class DefaultPrescriptionServiceImplTest {
     }
 
     @Test
+    public void testRequestCredentialPrescriptionExtraction() throws Exception {
+        Assume.assumeTrue(
+                loginInfo.containsKey("extract.success.username") &&
+                loginInfo.containsKey("extract.success.password") &&
+                loginInfo.containsKey("extract.success.type"));
+
+        Credential c = new Credential();
+
+        if(!loginInfo.containsKey("extract.success.type")){
+            throw new RuntimeException("Account information is not set.");
+        }
+        c.setSource(loginInfo.getProperty("extract.success.type"));
+        c.setUsername(loginInfo.getProperty("extract.success.username"));
+        c.setPassword(loginInfo.getProperty("extract.success.password"));
+        c.setId("Test Account");
+
+        DefaultPrescriptionServiceImpl impl = new DefaultPrescriptionServiceImpl();
+
+        //Request extraction without a location
+        //Initial request will issue a provisional response
+        TestSubscriber<AccountAggregationTaskResponse> reqSubscriber = new TestSubscriber<>();
+        impl.requestPrescriptionExtraction(c, null).subscribe(reqSubscriber);
+        reqSubscriber.awaitTerminalEvent();
+        reqSubscriber.assertNoErrors();
+        reqSubscriber.assertValueCount(1);
+
+        //Now wait for the final response
+        List<AccountAggregationTaskResponse> responseList = reqSubscriber.getOnNextEvents();
+        AccountAggregationTaskResponse taskResponse = responseList.get(0);
+        TestSubscriber<AccountAggregationTaskResponse> responseTestSubscriber = new TestSubscriber<>();
+        impl.waitForExtractResponse(taskResponse).subscribe(responseTestSubscriber);
+        responseTestSubscriber.awaitTerminalEvent();
+        responseTestSubscriber.assertNoErrors();
+        responseTestSubscriber.assertValueCount(1);
+
+        responseList = responseTestSubscriber.getOnNextEvents();
+        taskResponse = responseList.get(0);
+
+        Timber.i(new Gson().toJson(taskResponse));
+
+        assertNotNull(taskResponse);
+        assertThat("Extract success with good password.", taskResponse.resultCode, is(200));
+
+
+
+    }
+
+
+    @Test
     public void testRequestBadCredentialPrescriptionExtraction() throws Exception {
         Credential c = new Credential();
-        c.setSource("CVS");
-        c.setUsername("baduser@test.com");
-        c.setPassword("badpassword");
+        c.setSource(loginInfo.getProperty("extract.fail.type"));
+        c.setUsername(loginInfo.getProperty("extract.fail.username"));
+        c.setPassword(loginInfo.getProperty("extract.fail.password"));
+        c.setId("Test Account");
 
         DefaultPrescriptionServiceImpl impl = new DefaultPrescriptionServiceImpl();
 

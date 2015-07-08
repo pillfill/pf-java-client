@@ -34,6 +34,7 @@ import com.apothesource.pillfill.service.patient.impl.DefaultPatientServiceImpl.
 import com.apothesource.pillfill.service.patient.impl.DefaultPatientServiceImpl.UpdateDrugAlertsAction;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -83,7 +84,8 @@ public class LoadDataActionsTests {
         }
     }
 
-//    @Test
+    @Test
+    @Ignore("Service fails with 404 when bad IDs are included. Fix needs to occur on server.")
     public void testLoadBadRxIdsAction() throws Exception {
         LoadRxDataAction action = new LoadRxDataAction().prescriptionIds(badRxIds);
         PatientServiceImpl patientService = new DefaultPatientServiceImpl();

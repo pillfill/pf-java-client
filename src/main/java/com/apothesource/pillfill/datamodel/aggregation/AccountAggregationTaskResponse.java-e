@@ -25,8 +25,6 @@
  */
 package com.apothesource.pillfill.datamodel.aggregation;
 
-import com.apothesource.pillfill.datamodel.PrescriptionType;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -44,7 +42,7 @@ public class AccountAggregationTaskResponse implements Serializable {
 
     public String taskId;
     public String status;
-    public List<PrescriptionType> rxListResult;
+    public List<String> rxListResult;
     public int resultCode;
 }
 
