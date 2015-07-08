@@ -57,15 +57,26 @@ _<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com
 DrugAlertService offers methods to check for FDA Alerts (Drug <a href="http://www.fda.gov/Drugs/DrugSafety/DrugRecalls/default.htm">Recalls</a> and <a href="http://www.accessdata.fda.gov/scripts/drugshortages/default.cfm">Shortages</a>), <a href="http://www.epa.gov/ncct/dsstox/sdf_fdamdd.html">Maximum Recommended Therapeutic Dose</a> (MRTD- Overdose Monitoring), and
 <a href="http://rxnav.nlm.nih.gov/InteractionAPIs.html">Drug/Drug Interaction Checking</a> (via NIH/RxNav).
 
+#### Prescriber & Pharmacy Services
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescriber/PrescriberService.java">PrescriberService</a>
+
+Use the prescriber service to search for <a href="https://nppes.cms.hhs.gov/NPPES/">prescriber by NPI</a> or by name and location. You can also
+use this method to get detailed background information about a doctor including <a href="https://www.cms.gov/Medicare/Prescription-Drug-Coverage/PrescriptionDrugCovGenIn/PartDData.html">Medicare prescribing history</a> if available.
+
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescriber/PharmacyService.java">PharmacyService</a>
+
+Use the pharmacy service to retrieve detailed operational information (e.g. hours of operation, phone number) about a pharmacies included in a prescription's `pharmacyStoreId` field.
+
 #### Patient Services
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">PrescriptionService</a>
+
+Prescription service coordinates the task of doing Pharmacy/Insurance account information extraction and managing the prescriptions that are retrieved.
+
 ##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientService.java">PatientService</a>
 
 Each instance of this service represents a <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/datamodel/PatientType.java">single patient</a>. It is responsible for managing the Rx lists for an individual
 and syncing to/from the server. It ensures that sensitive information about the user is encrypted before it is synced to the server.
 
-##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">PrescriptionService</a>
-
-Prescription service coordinates the task of doing Pharmacy/Insurance account information extraction and managing the prescriptions that are retrieved.
 
 ##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientServiceLocator.java">PatientServiceLocator</a>
 
