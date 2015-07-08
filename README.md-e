@@ -32,8 +32,8 @@ _<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com
 
 ###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/drug/DrugService.java">DrugAlertService</a>
 
-DrugAlertService offers methods to check for FDA Alerts (Drug Recalls and Shortages), Maximum Recommended Therapeutic Dose (MRTD- Overdose Monitoring), and Drug/Drug Interaction
-Checking (via NIH/RxNav).
+DrugAlertService offers methods to check for FDA Alerts (Drug <a href="http://www.fda.gov/Drugs/DrugSafety/DrugRecalls/default.htm">Recalls</a> and <a href="http://www.accessdata.fda.gov/scripts/drugshortages/default.cfm">Shortages</a>), <a href="http://www.epa.gov/ncct/dsstox/sdf_fdamdd.html">Maximum Recommended Therapeutic Dose</a> (MRTD- Overdose Monitoring), and
+<a href="http://rxnav.nlm.nih.gov/InteractionAPIs.html">Drug/Drug Interaction Checking</a> (via NIH/RxNav).
 
 ## Patient Services
 
