@@ -26,9 +26,11 @@
 
 package com.apothesource.pillfill;
 
+import com.apothesource.pillfill.datamodel.DrugInformation;
 import com.apothesource.pillfill.datamodel.PrescriptionType;
 import com.apothesource.pillfill.datamodel.aggregation.AccountAggregationTaskResponse;
 import com.apothesource.pillfill.datamodel.userdatatype.Credential;
+import com.apothesource.pillfill.service.drug.impl.DefaultDrugServiceImpl;
 import com.apothesource.pillfill.service.prescription.impl.DefaultPrescriptionServiceImpl;
 import com.apothesource.pillfill.utilites.ResourceUtil;
 import com.google.gson.Gson;
@@ -62,7 +64,7 @@ public class CommandlineClient {
         switch(command){
             case "help":
                 System.out.println("Usage: CommandlineClient <command> [options]");
-                System.out.println("Where: <command> ∈ {extract,info,search}");
+                System.out.println("Where: <command> ∈ {extract,info}");
                 break;
             case "extract":
                 processExtract(argMap);
@@ -84,7 +86,12 @@ public class CommandlineClient {
             System.out.println("\t<apikey> is your PF API Key (go to https://pillfill.3scale.net if you don't have one)");
             System.out.println("\t<ids> can be an NDC, SPLID, NUI, RxNormId, or UNII");
         }else{
-
+            DefaultDrugServiceImpl drugService = new DefaultDrugServiceImpl();
+            String[] ids = argMap.get("ids").split(",");
+            List<DrugInformation> drugInformation = drugService.getDrugInformation(ids).toList().toBlocking().first();
+            for(DrugInformation di : drugInformation){
+                System.out.println(gson.toJson(di));
+            }
         }
 
     }

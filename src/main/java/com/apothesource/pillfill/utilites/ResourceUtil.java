@@ -76,7 +76,7 @@ public class ResourceUtil {
                 try{
                     InputStream urlResourceMappingStream = DefaultDrugServiceImpl.class.getResourceAsStream("/private_credentials.properties");
                     resourceMappings.load(urlResourceMappingStream);
-                }catch(IOException e){
+                }catch(Exception e){
                     Timber.w("Could not find private_credentials.properties so it won't be loaded.");
                 }
             }

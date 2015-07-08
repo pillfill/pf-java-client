@@ -264,7 +264,7 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
 
     private String getUrlForType(Class t){
         String[] components = t.getSimpleName().split("[\\.]");
-        String simpleName = components[components.length - 1].replaceAll("[^\\w]","");
+        String simpleName = components[components.length - 1].replaceAll("[^\\w]", "");
         return urlToTypeMapping.getProperty(simpleName);
     }
     /**
@@ -279,10 +279,30 @@ public class DefaultDrugServiceImpl extends PFBaseServiceContext implements Drug
         return subscribeIoObserveImmediate(subscriber -> {
             try {
                 List<String> brandNames = loadBrandNameDrug(rxnormId);
-                if(!brandNames.isEmpty()) Observable.from(brandNames).forEach(subscriber::onNext);
+                if (!brandNames.isEmpty()) Observable.from(brandNames).forEach(subscriber::onNext);
                 subscriber.onCompleted();
             } catch (Exception e) {
                 Timber.e(e, "Error accessing brand name for rxNormId: %s", rxnormId);
+                subscriber.onError(e);
+            }
+        });
+    }
+
+    @Override
+    public Observable<DrugInformation> getDrugInformation(String... ids) {
+        if (ids== null || ids.length == 0) return Observable.empty();
+        String uniiList = Joiner.on(",").join(ids);
+        final String url = String.format(PFServiceEndpoints.NDFRT_BY_UNII_URL, uniiList);
+        return subscribeIoObserveImmediate(subscriber -> {
+            try{
+                String response = PFNetworkManager.doPinnedGetForUrl(url);
+                List<DrugInformation> drugInformation = gson.fromJson(response, DRUGINFO_LIST_TYPE);
+                if(!drugInformation.isEmpty()){
+                    Observable.from(drugInformation).forEach(subscriber::onNext);
+                }
+                subscriber.onCompleted();
+            } catch (IOException e) {
+                Timber.e("Couldn't get DrugInformation concepts for IDs: %s", ids.toString());
                 subscriber.onError(e);
             }
         });

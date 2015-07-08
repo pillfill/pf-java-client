@@ -96,4 +96,6 @@ public interface DrugService {
      * @return A stream of Strings for possible brand names for this concept
      */
     Observable<String> getBrandNamesForDrug(String rxnormId);
+
+    Observable<DrugInformation> getDrugInformation(String... ids);
 }
