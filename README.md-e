@@ -10,40 +10,52 @@ We're focused on three areas:
 * Doctor & Pharmacy Information
 * Patient Rx Information
 
-These are fairly broad groups and will probably mean breaking them into separate modules in the future. 
+These are fairly broad groups and will probably mean breaking each into their separate module in the future.
 
 Most of the data services depend on pulling information from the _developer.pillfill.com_ server, so you'll need to get an <a href="https://pillfill.3scale.net/">API Key</a>. 
 Swagger documentation on the REST services is available at the <a href="https://developer.pillfill.com">PillFill Developer Site</a>.
 
+Command Line
+-------
+
+You can invoke the CommandLine interface by running the library as an executable Jar:
+
+Example: Export your CVS prescription information:
+ `java -jar pf-java-client-* extract apikey=MYAPIKEY123 username=myusername@example.com password=MyPassWord1 type=CVS`
+
+Example: Get more information about concept 'N022111124':
+  `java -jar pf-java-client-* info apikey=MYAPIKEY123 ids=N022111124`
+
+(You can also invoke `com.apothesource.pillfill.CommandLine` directly if you'd prefer)
 
 Primary Services
 -------
 
 Some of the most useful functions in this library are the following services (or proxies for the PF backend services) to provide information about drugs, providers, and patients. Most
-will reach back to the PillFill Server as needed to retrieve relevant information.
+will reach back to the PillFill Server as needed to retrieve relevant information. Be sure to set your apikey as either a system property (e.g. `export pfApiKey=[YOUR_API_KEY]`) or in
+the _<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/resources/credentials.properties">credentials.properties</a>_ file.
 
-## Drug & Interaction Services
-###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/drug/DrugService.java">DrugService</a>
+#### Drug & Interaction Services
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/drug/DrugService.java">DrugService</a>
 
 DrugService provides methods to access information about medications, broken into Generic Drug
 _<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/datamodel/ndfrt/FullConcept.java">concepts</a>_
 (e.g. Ibuprofen 200mg Pills) and _<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/datamodel/spl/SplEntry.java">products</a>_
 (e.g. Advil 200mg Pill 100 Pill Bottle).
 
-###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/drug/DrugService.java">DrugAlertService</a>
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/drug/DrugService.java">DrugAlertService</a>
 
 DrugAlertService offers methods to check for FDA Alerts (Drug <a href="http://www.fda.gov/Drugs/DrugSafety/DrugRecalls/default.htm">Recalls</a> and <a href="http://www.accessdata.fda.gov/scripts/drugshortages/default.cfm">Shortages</a>), <a href="http://www.epa.gov/ncct/dsstox/sdf_fdamdd.html">Maximum Recommended Therapeutic Dose</a> (MRTD- Overdose Monitoring), and
 <a href="http://rxnav.nlm.nih.gov/InteractionAPIs.html">Drug/Drug Interaction Checking</a> (via NIH/RxNav).
 
-## Patient Services
-
-###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientService.java">PatientService</a>
+#### Patient Services
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientService.java">PatientService</a>
 
 Each instance of this service represents a <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/datamodel/PatientType.java">single patient</a>. It is responsible for managing the Rx lists for an individual
 and syncing to/from the server. It ensures that sensitive information about the user is encrypted before it is synced to
 the server.
 
-###<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientServiceLocator.java">PatientServiceLocator</a>
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientServiceLocator.java">PatientServiceLocator</a>
 
 PatientServiceLocator helps organize and mange instances of PatientService (assuming you're managing multiple patients).
 
