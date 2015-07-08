@@ -41,6 +41,7 @@ import com.google.common.base.Joiner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -73,14 +74,13 @@ public class DefaultPrescriptionServiceImpl implements PrescriptionService {
     }.getType();
     private static final String HTTP_CONTENT_TYPE_JSON = "application/json";
     public static final int EXTRACT_TIMEOUT_SECONDS = 60;
-    public static final int EXTRACT_POLL_TIME_SECONDS = 2;
+    public static final int EXTRACT_POLL_TIME_SECONDS = 5;
 
     @Override
     public Observable<PrescriptionType> getPrescription(String rxId) {
         return getPrescriptions(Collections.singletonList(rxId));
     }
 
-    @Override
     public Observable<PrescriptionType> getPrescriptionWithRevId(String rxId, String revId) {
         throw new UnsupportedOperationException("Not implmenented yet");
     }
@@ -129,6 +129,7 @@ public class DefaultPrescriptionServiceImpl implements PrescriptionService {
         });
     }
 
+    @Override
     public Observable<AccountAggregationTaskResponse> requestPrescriptionExtraction(Credential c, Point location) {
         AccountAggregationTaskRequest request = new AccountAggregationTaskRequest();
         request.datasource = c.getSource();
@@ -139,8 +140,11 @@ public class DefaultPrescriptionServiceImpl implements PrescriptionService {
         return requestPrescriptionExtraction(request);
     }
 
+    @Override
     public Observable<AccountAggregationTaskResponse> requestPrescriptionExtraction(AccountAggregationTaskRequest request) {
         return subscribeIoObserveImmediate(subscriber -> {
+            String responseStr = null;
+
             try {
                 OkHttpClient client = PFNetworkManager.getPinnedPFHttpClient();
                 Request req = new Request.Builder()
@@ -149,16 +153,21 @@ public class DefaultPrescriptionServiceImpl implements PrescriptionService {
                         .build();
 
                 Response res = client.newCall(req).execute();
-                AccountAggregationTaskResponse response = gson.fromJson(res.body().charStream(), AccountAggregationTaskResponse.class);
+                responseStr = res.body().string();
+                AccountAggregationTaskResponse response = gson.fromJson(responseStr, AccountAggregationTaskResponse.class);
                 subscriber.onNext(response);
                 subscriber.onCompleted();
-            } catch (IOException ex) {
-                Logger.getLogger(DefaultPrescriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                subscriber.onError(ex);
+            } catch (IOException e) {
+                log.log(Level.SEVERE, "Communication error during extraction request.");
+                subscriber.onError(e);
+            }catch (JsonSyntaxException e){
+                log.severe(String.format("Error parsing response: %s", responseStr));
+                subscriber.onError(e);
             }
         });
     }
 
+    @Override
     public Observable<AccountAggregationTaskResponse> getExtractResponse(AccountAggregationTaskResponse task) {
         return subscribeIoObserveImmediate(subscriber -> {
             OkHttpClient client = PFNetworkManager.getPinnedPFHttpClient();
