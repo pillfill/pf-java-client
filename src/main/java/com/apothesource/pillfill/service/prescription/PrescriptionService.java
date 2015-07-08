@@ -68,9 +68,10 @@ public interface PrescriptionService {
     Observable<PrescriptionType> enrichPrescriptions(List<PrescriptionType> rxList);
 
     /**
-     * Sends the provided account information to the PF server to preform an health/Rx record extraction. A short-lived is
-     * instantiated just long enough to preform the data Rx extraction work. Once completed, all sensitive information is
-     * is purged along with the worker itself, only the de-identified prescription data is retained.
+     * Sends the provided account information to the PF server to preform an health/Rx record extraction. A short-lived worker is
+     * instantiated just long enough to preform the export for a single individual. Once completed, all sensitive information is
+     * is purged along with the worker itself; Only the de-identified prescription data is retained (accessible by retrieving
+     * the rxList with the {@link PrescriptionType#uuid}s).
      *
      * @param request A request to extract health/rx information with the provided information
      * @return A stream of responses, normally acknowledging the receipt of the request
