@@ -1,4 +1,3 @@
-/src/test/resources/test_credentials.properties
 /gradle.properties
 /.gradle/*
 /build/*
@@ -7,3 +6,4 @@ PFJavaClient.iml
 .idea
 .nb-gradle
 gradle
+src/test/resources/test_credentials.properties
