@@ -20,15 +20,15 @@ Command Line
 
 You can invoke the CommandLine interface by running the library as an executable Jar:
 
-Example: Export your CVS prescription information:
+Example: _Export your CVS prescription information_:
 
   `java -jar pf-java-client-* extract apikey=MYAPIKEY123 username=myusername@example.com password=MyPassWord1 type=CVS`
 
-Example: Get production information about drug with NDC '00555078802':
+Example: _Get product information about drug with NDC '00555078802'_:
 
   `java -jar pf-java-client-* info apikey=MYAPIKEY123 ids=00555078802`
 
-Example: Get more information about concept 'N022111124':
+Example: _Get concept information about 'N022111124'_:
 
   `java -jar pf-java-client-* info apikey=MYAPIKEY123 ids=N022111124`
 
