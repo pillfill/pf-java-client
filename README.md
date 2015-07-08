@@ -17,26 +17,27 @@ These are fairly broad groups and will probably mean breaking each into their se
 Most of the data services depend on pulling information from the _developer.pillfill.com_ server, so you'll need to get an <a href="https://pillfill.3scale.net/">API Key</a>. 
 Swagger documentation on the REST services is available at the <a href="https://developer.pillfill.com">PillFill Developer Site</a>.
 
-Command Line
+
+Command Line Tool
 -------
 
 You can invoke the CommandLine interface by running the library as an executable Jar:
 
-Example: _Export your CVS prescription information_:
-
-  `java -jar pf-java-client-* extract apikey=MYAPIKEY123 username=myusername@example.com password=MyPassWord1 type=CVS`
-
 Example: _Get product information about drug with NDC '00555078802'_:
 
-  `java -jar pf-java-client-* info apikey=MYAPIKEY123 ids=00555078802`
+  `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=00555078802`
 
-Example: _Get concept information about 'N022111124'_:
+Example: _Get concept information about *National Drug File* ID 'N022111124'_:
 
-  `java -jar pf-java-client-* info apikey=MYAPIKEY123 ids=N022111124`
+  `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=N022111124`
 
-(You can also invoke `com.apothesource.pillfill.CommandLine` directly if you'd prefer)
+Example: _Export your prescription information from your pharmacy_:
 
-Primary Services
+  `java -jar pf-java-client-* extract apikey=[YOUR_API_KEY] username=[YOUR_CVS_LOGIN] password=[YOUR_CVS_PASSWORD] type=CVS outfile=rx-export.json`
+
+(You can also invoke `com.apothesource.pillfill.CommandLine` directly if you'd prefer it that way)
+
+Primary Features & Services
 -------
 
 Some of the most useful functions in this library are the following services (or proxies for the PF backend services) to provide information about drugs, providers, and patients. Most
