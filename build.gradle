@@ -100,7 +100,5 @@ task copyTestResources(type: Copy) {
     into "${buildDir}/classes/test"
 }
 test{
-    //exclude 'com/apothesource/pillfill/service/*/impl/*'
-    systemProperties 'pfApiKey': System.properties['pfApiKey']
     logging.setLevel(LogLevel.INFO)
 }
