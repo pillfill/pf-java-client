@@ -83,7 +83,7 @@ public class DefaultPrescriptionServiceImplTest {
         ArrayList<PrescriptionType> rxList = new ArrayList<>();
         DefaultPrescriptionServiceImpl impl = new DefaultPrescriptionServiceImpl();
         Subscription subscription = impl.getPrescriptions(Arrays.asList(rxIds)).subscribe(rx -> {
-            log.info(gson.toJson(rx));
+            log.fine(gson.toJson(rx));
             rxList.add(rx);
         }, throwable -> {
             throw new RuntimeException("Error retrieving rxs from server", throwable);

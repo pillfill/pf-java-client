@@ -80,7 +80,7 @@ public class DefaultDrugServiceImplTest {
     @Test
     public void testGetNdfrtInformation() throws Exception {
         List<? extends FullConcept> conceptList = defaultDrugServiceImpl
-                .getConceptList(new FullConcept().getClass(), "N0000146197", "N0000146196")
+                .getConceptList(FullConcept.class, "N0000146197", "N0000146196")
                 .toList()
                 .toBlocking()
                 .first();
@@ -95,7 +95,7 @@ public class DefaultDrugServiceImplTest {
     @Test
     public void testGetRxList() throws Exception {
         List<? extends PrescriptionType> rxList = defaultDrugServiceImpl
-                .getConceptList(new PrescriptionType().getClass(),
+                .getConceptList(PrescriptionType.class,
                         "00090D9ABEAFFDE010EAD13E8E845AF2232976A745C710F8801EC8F35BCD7494",
                         "00153170CDEC5571789987505799C59EB63C06BCC821B23E3D70A566F3F95A70",
                         "002C0ABB528855B112BD9E50282B19CD7A01A4E95657C3090BA6F6042BC89208")

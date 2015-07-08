@@ -76,7 +76,6 @@ public class LoadDataActionsTests {
         PatientServiceImpl patientService = new DefaultPatientServiceImpl();
         action.patientService(patientService);
         if (action.doAction().toBlocking().last() == ExecutionResult.RESULT_SUCCESS) {
-            log.info("Load completed.");
             List<PrescriptionType> rxList = patientService.getAllPrescriptions().toList().toBlocking().first();
             assertThat("All good RxIds load.", rxList.size(), is(goodRxIds.size()));
         } else {
@@ -91,7 +90,6 @@ public class LoadDataActionsTests {
         PatientServiceImpl patientService = new DefaultPatientServiceImpl();
         action.patientService(patientService);
         if (action.doAction().toBlocking().last() == ExecutionResult.RESULT_SUCCESS) {
-            log.info("Load completed.");
             List<PrescriptionType> rxList = patientService.getAllPrescriptions().toList().toBlocking().first();
             assertThat("Bad RxIds don't load.", rxList.size(), is(0));
         } else {
@@ -126,9 +124,6 @@ public class LoadDataActionsTests {
                 for (PrescriptionType rx : rxList) {
                     Set<DrugAlertType> drugAlerts = rx.getDrugAlerts();
                     alertList.addAll(drugAlerts);
-                    for (DrugAlertType alert : drugAlerts) {
-                        log.info("Drug Interaction: " + alert.getType());
-                    }
                 }
                 assertThat("3 interactions loaded.", alertList.size(), is(3));
             } else {
