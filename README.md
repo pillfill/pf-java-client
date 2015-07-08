@@ -63,7 +63,7 @@ DrugAlertService offers methods to check for FDA Alerts (Drug <a href="http://ww
 Use the prescriber service to search for <a href="https://nppes.cms.hhs.gov/NPPES/">prescriber by NPI</a> or by name and location. You can also
 use this method to get detailed background information about a doctor including <a href="https://www.cms.gov/Medicare/Prescription-Drug-Coverage/PrescriptionDrugCovGenIn/PartDData.html">Medicare prescribing history</a> if available.
 
-##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescriber/PharmacyService.java">PharmacyService</a>
+##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/pharmacy/PharmacyService.java">PharmacyService</a>
 
 Use the pharmacy service to retrieve detailed operational information (e.g. hours of operation, phone number) about a pharmacies included in a prescription's `pharmacyStoreId` field.
 
