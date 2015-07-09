@@ -7,9 +7,9 @@ This library aims to make building mHealth applications easier. It serves as the
 
 We're focused on three areas:
 
-* Drug & Interaction Information
+* Medication & Interaction Information
 * Doctor & Pharmacy Information
-* Patient Rx Information
+* Patient Rx Information (<a href="https://github.com/rammic/pf-java-client/wiki/Aggregating-Prescription-Information">Automatic Prescription Import</a>)
 
 These are fairly broad groups and will probably mean breaking each into their separate module in the future.
 
@@ -24,7 +24,7 @@ Some of the most useful functions in this library are the following services (or
 will reach back to the PillFill Server as needed to retrieve relevant information. Be sure to set your apikey as either a system property (e.g. `export pfApiKey=[YOUR_API_KEY]`) or in
 the _<a href="https://github.com/rammic/pf-java-client/blob/master/src/main/resources/credentials.properties">credentials.properties</a>_ file.
 
-#### Drug & Interaction Services
+#### Medication & Interaction Services
 ##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/drug/DrugService.java">DrugService</a>
 
 DrugService provides methods to access information about medications, broken into Generic Drug
