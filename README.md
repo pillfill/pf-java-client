@@ -1,10 +1,9 @@
 # PillFill Java Client
-
-![PillFill](logo.png)
-
 [![Build Status](https://travis-ci.org/rammic/pf-java-client.svg?branch=master)](https://travis-ci.org/rammic/pf-java-client)
 
 This library aims to make building mHealth applications easier. It serves as the base of the <a href="https://play.google.com/store/apps/details?id=com.apothesource.pillfill.android">PillFill Android Application</a>.
+
+![PillFill](logo.png)
 
 We're focused on three areas:
 
@@ -17,25 +16,6 @@ These are fairly broad groups and will probably mean breaking each into their se
 Most of the data services depend on pulling information from the _developer.pillfill.com_ server, so you'll need to get an <a href="https://pillfill.3scale.net/">API Key</a>. 
 Swagger documentation on the REST services is available at the <a href="https://developer.pillfill.com">PillFill Developer Site</a>.
 
-
-Command Line Tool
--------
-
-You can invoke the CommandLine interface by running the library as an executable Jar:
-
-Example: **Get product information about drug with NDC '00555078802'**:
-
-  `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=00555078802`
-
-Example: **Get concept information about *National Drug File* ID 'N022111124'**:
-
-  `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=N022111124`
-
-Example: **Export your prescription information from your pharmacy**:
-
-  `java -jar pf-java-client-* extract apikey=[YOUR_API_KEY] username=[YOUR_CVS_LOGIN] password=[YOUR_CVS_PASSWORD] type=CVS outfile=rx-export.json`
-
-The export process is described in more detail <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">in the PrescriptionService documentation.</a>
 
 Primary Features & Services
 -------
@@ -81,6 +61,26 @@ and syncing to/from the server. It ensures that sensitive information about the 
 ##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientServiceLocator.java">PatientServiceLocator</a>
 
 PatientServiceLocator helps organize and mange instances of PatientService (assuming you're managing multiple patients).
+
+
+Example CommandLine Tool
+-------
+
+You can invoke the CommandLine interface by running the library as an executable Jar:
+
+Example: **Get product information about drug with NDC '00555078802'**:
+
+  `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=00555078802`
+
+Example: **Get concept information about *National Drug File* ID 'N022111124'**:
+
+  `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=N022111124`
+
+Example: **Export your prescription information from your pharmacy**:
+
+  `java -jar pf-java-client-* extract apikey=[YOUR_API_KEY] username=[YOUR_CVS_LOGIN] password=[YOUR_CVS_PASSWORD] type=CVS outfile=rx-export.json`
+
+The export process is described in more detail <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">in the PrescriptionService documentation.</a>
 
 
 License
