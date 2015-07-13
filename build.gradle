@@ -134,7 +134,7 @@ uploadArchives {
             pom.project {
                 name 'PillFill Java Client'
                 packaging 'jar'
-                description 'A application used as an example on how to set up pushing  its components to the Central Repository.'
+                description 'A mHealth library to simplify accessing patient prescriptions, drug information, and prescriber/pharmacy data.'
                 url 'http://developer.pillfill.com/'
 
                 scm {
