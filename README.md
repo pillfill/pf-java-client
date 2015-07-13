@@ -25,14 +25,14 @@ The easiest way to get started is to simply add a dependency. If you're using ma
 <dependency>
   <groupId>com.apothesource.pillfill</groupId>
   <artifactId>pf-java-client</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
 Or if you're using gradle (e.g. w/ Android Studio):
 ```Groovy
 dependency{
-    compile 'com.apothesource.pillfill:pf-java-client:1.0.0'
+    compile 'com.apothesource.pillfill:pf-java-client:1.0.1'
 }
 ```
 
