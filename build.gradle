@@ -36,7 +36,7 @@ sourceCompatibility = '1.8'
 group = 'com.apothesource.pillfill'
 archivesBaseName = 'pf-java-client'
 version = '1.0.1-SNAPSHOT'
-
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 repositories {
     mavenCentral()
@@ -46,8 +46,8 @@ repositories {
 
 retrolambda {
     //Pull the System environment settings if they exist- If not, use gradle.properties
-    jdk System.getenv("JAVA8_HOME") ? System.getenv("JAVA8_HOME") : "${JAVA8_HOME}"
-    oldJdk System.getenv("JAVA7_HOME") ? System.getenv("JAVA7_HOME") : "${JAVA7_HOME}"
+    jdk System.getenv("JAVA8_HOME") != null ? System.getenv("JAVA8_HOME") : "${JAVA8_HOME}"
+    oldJdk System.getenv("JAVA7_HOME") != null ? System.getenv("JAVA7_HOME") : "${JAVA7_HOME}"
     javaVersion JavaVersion.VERSION_1_7
 }
 
@@ -58,14 +58,14 @@ jar {
     manifest {
         attributes 'Main-Class': 'com.apothesource.pillfill.CommandlineClient'
     }
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-        configurations.runtime.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
+//    from {
+//        configurations.compile.collect {
+//            it.isDirectory() ? it : zipTree(it)
+//        }
+//        configurations.runtime.collect {
+//            it.isDirectory() ? it : zipTree(it)
+//        }
+//    }
 }
 sourceSets {
     main {
@@ -94,7 +94,7 @@ test{
 }
 javadoc{
     failOnError false
-    exclude "src/main/java/com/apothesource/pillfill/datamodel/**"
+    exclude "**com/apothesource/pillfill/datamodel/**"
 }
 
 task copyTestResources(type: Copy) {
@@ -109,15 +109,13 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
-
-
 artifacts {
     archives javadocJar, sourcesJar
 }
 signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
-
 
 uploadArchives {
     repositories {
