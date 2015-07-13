@@ -63,10 +63,10 @@ and syncing to/from the server. It ensures that sensitive information about the 
 PatientServiceLocator helps organize and mange instances of PatientService (assuming you're managing multiple patients).
 
 
-Example CommandLine Tool
+Example Command Line Tool
 -------
 
-You can invoke the CommandLine interface by running the library as an executable Jar:
+You can invoke a CLI to test the API by running the library as an executable Jar:
 
 Example: **Get product information about drug with NDC '00555078802'**:
 
