@@ -17,6 +17,25 @@ Most of the data services depend on pulling information from the _developer.pill
 Swagger documentation on the REST services is available at the <a href="https://developer.pillfill.com">PillFill Developer Site</a>.
 
 
+Integration and Use
+-------
+
+The easiest way to get started is to simply add a dependency. If you're using maven:
+```XML
+<dependency>
+  <groupId>com.apothesource.pillfill</groupId>
+  <artifactId>pf-java-client</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+Or if you're using gradle (e.g. w/ Android Studio):
+```Groovy
+dependency{
+    compile 'com.apothesource.pillfill:pf-java-client:1.0.0'
+}
+```
+
 Primary Features & Services
 -------
 
@@ -50,7 +69,7 @@ Use the pharmacy service to retrieve detailed operational information (e.g. hour
 #### Patient Services
 ##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">PrescriptionService</a>
 
-Prescription service coordinates the task of doing Pharmacy/Insurance account information extraction and managing the prescriptions that are retrieved.
+Prescription service coordinates the task of extracting and managing prescriptions from pharmacy and insurance accounts. <a href="https://github.com/rammic/pf-java-client/wiki/Prescriptions-and-Drug-Identifiers">More information about data included in the prescription</a>.
 
 ##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientService.java">PatientService</a>
 
@@ -58,29 +77,36 @@ Each instance of this service represents a <a href="https://github.com/rammic/pf
 and syncing to/from the server. It ensures that sensitive information about the user is encrypted before it is synced to the server.
 
 
-##### <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/patient/PatientServiceLocator.java">PatientServiceLocator</a>
-
-PatientServiceLocator helps organize and mange instances of PatientService (assuming you're managing multiple patients).
-
-
 Example Command Line Tool
 -------
 
-You can invoke a CLI to test the API by running the library as an executable Jar:
+You can invoke a CLI to test the API by running the library as an executable Jar. First build a fatJar to avoid classpath issues:
+
+`./gradlew fatJar`
+
+This should build a Jar with the path of `build/libs/pf-java-client.jar`. Switch to directory (`cd build/libs`) to run commands from the command line. You can try any of the following:
 
 Example: **Get product information about drug with NDC '00555078802'**:
 
-  `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=00555078802`
+  `java -jar pf-java-client.jar info apikey=[YOUR_API_KEY] ids=00555078802`
 
 Example: **Get concept information about *National Drug File* ID 'N022111124'**:
 
-  `java -jar pf-java-client-* info apikey=[YOUR_API_KEY] ids=N022111124`
+  `java -jar pf-java-client.jar info apikey=[YOUR_API_KEY] ids=N022111124`
 
 Example: **Export your prescription information from your pharmacy**:
 
-  `java -jar pf-java-client-* extract apikey=[YOUR_API_KEY] username=[YOUR_CVS_LOGIN] password=[YOUR_CVS_PASSWORD] type=CVS outfile=rx-export.json`
+  `java -jar pf-java-client.jar extract apikey=[YOUR_API_KEY] username=[YOUR_CVS_LOGIN] password=[YOUR_CVS_PASSWORD] type=CVS outfile=rx-export.json`
 
 The export process is described in more detail <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">in the PrescriptionService documentation.</a>
+
+
+Build
+-------
+
+Be sure to set `JAVA7_HOME` & `JAVA8_HOME` environment variables (or in gradle.properties) if you want to build from scratch since this library depends on <a href="https://github.com/orfjackal/retrolambda">retrolambda</a> to
+handle the conversion of lambda functions to Android-compatible Java 7 baseline.
+
 
 
 License
