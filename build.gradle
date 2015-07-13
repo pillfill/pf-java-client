@@ -1,48 +1,16 @@
-
-/*
- *
- *  * The MIT License
- *  *
- *  * Copyright {$YEAR} Apothesource, Inc.
- *  *
- *  * Permission is hereby granted, free of charge, to any person obtaining a copy
- *  * of this software and associated documentation files (the "Software"), to deal
- *  * in the Software without restriction, including without limitation the rights
- *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  * copies of the Software, and to permit persons to whom the Software is
- *  * furnished to do so, subject to the following conditions:
- *  *
- *  * The above copyright notice and this permission notice shall be included in
- *  * all copies or substantial portions of the Software.
- *  *
- *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  * THE SOFTWARE.
- *
- */
-
 plugins {
     id 'me.tatarka.retrolambda' version '3.1.0'
     id 'java'
     id 'maven'
+    id 'signing'
 }
 
-def Properties versionProps = new Properties()
-def versionPropsFile = file('version.properties')
-if(versionPropsFile.exists())
-    versionProps.load(new FileInputStream(versionPropsFile))
-def code = (versionProps['VERSION_CODE'] ?: "0").toInteger() + 1
-versionProps['VERSION_CODE'] = code.toString()
-versionProps.store(versionPropsFile.newWriter(), null)
-
 sourceCompatibility = '1.8'
-version = '1.0.' + code
+
 group = 'com.apothesource.pillfill'
 archivesBaseName = 'pf-java-client'
+version = '1.0.0'
+
 
 repositories {
     mavenCentral()
@@ -51,8 +19,8 @@ repositories {
 }
 
 retrolambda {
-    jdk System.getenv("JAVA8_HOME")
-    oldJdk System.getenv("JAVA7_HOME")
+    jdk "${JAVA8_HOME}"
+    oldJdk "${JAVA7_HOME}"
     javaVersion JavaVersion.VERSION_1_7
 }
 
@@ -77,7 +45,6 @@ sourceSets {
         compileClasspath += configurations.provided
     }
 }
-
 dependencies {
     compile 'com.google.code.gson:gson:2.3'
     compile 'org.cryptonode.jncryptor:jncryptor:1.2.0'
@@ -95,10 +62,76 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+test{
+    logging.setLevel(LogLevel.INFO)
+}
+javadoc{
+    failOnError false
+    exclude '"${projectDir}/src/main/java/com/apothesource/pillfill/datamodel/**'
+}
+
 task copyTestResources(type: Copy) {
     from "${projectDir}/src/test/resources"
     into "${buildDir}/classes/test"
 }
-test{
-    logging.setLevel(LogLevel.INFO)
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+signing {
+    sign configurations.archives
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'PillFill Java Client'
+                packaging 'jar'
+                description 'A application used as an example on how to set up pushing  its components to the Central Repository.'
+                url 'http://developer.pillfill.com/'
+
+                scm {
+                    connection 'scm:git:git://github.com/rammic/pf-java-client.git'
+                    developerConnection 'scm:git:git://github.com/rammic/pf-java-client.git'
+                    url 'https://github.com/rammic/pf-java-client'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'https://raw.githubusercontent.com/rammic/pf-java-client/master/license.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'rammic'
+                        name 'Michael Ramirez'
+                        email 'michael@pillfill.com'
+                    }
+                }
+            }
+        }
+    }
 }
