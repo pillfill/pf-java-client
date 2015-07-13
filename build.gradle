@@ -45,8 +45,9 @@ repositories {
 }
 
 retrolambda {
-    jdk "${JAVA8_HOME}"
-    oldJdk "${JAVA7_HOME}"
+    //Pull the System environment settings if they exist- If not, use gradle.properties
+    jdk System.getenv("JAVA8_HOME") ? System.getenv("JAVA8_HOME") : "${JAVA8_HOME}"
+    oldJdk System.getenv("JAVA7_HOME") ? System.getenv("JAVA7_HOME") : "${JAVA7_HOME}"
     javaVersion JavaVersion.VERSION_1_7
 }
 
@@ -93,7 +94,7 @@ test{
 }
 javadoc{
     failOnError false
-    exclude '"${projectDir}/src/main/java/com/apothesource/pillfill/datamodel/**'
+    exclude "src/main/java/com/apothesource/pillfill/datamodel/**"
 }
 
 task copyTestResources(type: Copy) {
