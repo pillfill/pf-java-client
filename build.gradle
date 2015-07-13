@@ -101,21 +101,21 @@ task copyTestResources(type: Copy) {
     from "${projectDir}/src/test/resources"
     into "${buildDir}/classes/test"
 }
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-artifacts {
-    archives javadocJar, sourcesJar
-}
-signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
-}
+//task javadocJar(type: Jar) {
+//    classifier = 'javadoc'
+//    from javadoc
+//}
+//task sourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    from sourceSets.main.allSource
+//}
+//artifacts {
+//    archives javadocJar, sourcesJar
+//}
+//signing {
+//    required false
+//    sign configurations.archives
+//}
 
 uploadArchives {
     repositories {
