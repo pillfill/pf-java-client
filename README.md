@@ -94,11 +94,15 @@ Example: **Get concept information about *National Drug File* ID 'N022111124'**:
 
   `java -jar pf-java-client.jar info apikey=[YOUR_API_KEY] ids=N022111124`
 
-Example: **Export your prescription information from your pharmacy**:
+Example: **Export a prescription information for a given user**:
 
-  `java -jar pf-java-client.jar extract apikey=[YOUR_API_KEY] username=[YOUR_CVS_LOGIN] password=[YOUR_CVS_PASSWORD] type=CVS outfile=rx-export.json`
+  `java -jar pf-java-client.jar extract apikey=[YOUR_API_KEY] username=testuser@example.com password=testPassword type=test outfile=rx-export.json`
 
-The export process is described in more detail <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">in the PrescriptionService documentation.</a>
+  This will retrieve a set of example prescriptions. You can also use this to extract live information:
+
+  `java -jar pf-java-client.jar extract apikey=[YOUR_API_KEY] username=[YOUR_USERNAME] password=[YOUR_PASSWORD] type=[ACCOUNT_TYPE] outfile=rx-export.json`
+
+  The export process is described in more detail <a href="https://github.com/rammic/pf-java-client/blob/master/src/main/java/com/apothesource/pillfill/service/prescription/PrescriptionService.java">in the PrescriptionService documentation.</a>. A current list of supported account types is [available on the developer site](https://developer.pillfill.com/apis/?url=/service/api-docs?group=rx-aggregation-api-v1#!/rx-aggregation-service/getSupportedAccountTypes).
 
 
 Build
