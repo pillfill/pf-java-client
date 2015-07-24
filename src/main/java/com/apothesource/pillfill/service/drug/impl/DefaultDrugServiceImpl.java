@@ -38,7 +38,6 @@ import com.apothesource.pillfill.datamodel.spl.Product;
 import com.apothesource.pillfill.datamodel.spl.SplEntry;
 import com.apothesource.pillfill.datamodel.spl.SplInformation;
 import com.apothesource.pillfill.network.PFNetworkManager;
-import com.apothesource.pillfill.service.PFBaseServiceContext;
 import com.apothesource.pillfill.service.drug.DrugService;
 import com.apothesource.pillfill.service.PFServiceEndpoints;
 import com.apothesource.pillfill.utilites.ResourceUtil;
@@ -74,7 +73,7 @@ import javax.xml.xpath.XPathFactory;
 import rx.Observable;
 import timber.log.Timber;
 
-public class DefaultDrugServiceImpl extends PFBaseServiceContext implements DrugService {
+public class DefaultDrugServiceImpl implements DrugService {
     private static final String URL_RXNORM_BRAND_NAME_BY_NDC = "http://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=%s";
     private static Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd").create();
     private final XPathExpression XPATH_GET_DRUG_BN;

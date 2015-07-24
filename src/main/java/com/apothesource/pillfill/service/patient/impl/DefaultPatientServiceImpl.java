@@ -68,7 +68,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 
 import rx.Observable;
@@ -417,7 +416,6 @@ public class DefaultPatientServiceImpl implements PatientServiceImpl {
     }
 
     public static class UpdateDrugAlertsAction extends PatientCommand<UpdateDrugAlertsAction> {
-        @Inject
         DrugAlertService mDrugAlertSvc;
         private HashMap<String, PrescriptionType> mRxMap;
 
