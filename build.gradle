@@ -22,7 +22,7 @@ retrolambda {
     //Pull the System environment settings if they exist- If not, use gradle.properties
     jdk System.getenv("JAVA8_HOME") != null ? System.getenv("JAVA8_HOME") : "${JAVA8_HOME}"
     oldJdk System.getenv("JAVA7_HOME") != null ? System.getenv("JAVA7_HOME") : "${JAVA7_HOME}"
-    javaVersion JavaVersion.VERSION_1_7
+    javaVersion = JavaVersion.VERSION_1_7
 }
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -32,6 +32,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
     compile 'com.google.guava:guava:18.0'
+    compile 'com.couchbase.lite:couchbase-lite-java:1.1.0'
 
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
     testCompile 'org.mockito:mockito-core:1.9.5'
@@ -93,10 +94,10 @@ uploadArchives {
             }
 
             pom.project {
-                name 'PillFill Java Client'
-                packaging 'jar'
-                description 'A mHealth library to simplify accessing patient prescriptions, drug information, and prescriber/pharmacy data.'
-                url 'https://developer.pillfill.com/'
+                name='PillFill Java Client'
+                packaging='jar'
+                description='A mHealth library to simplify accessing patient prescriptions, drug information, and prescriber/pharmacy data.'
+                url='https://developer.pillfill.com/'
 
                 scm {
                     connection 'scm:git:git://github.com/pillfill/pf-java-client.git'
